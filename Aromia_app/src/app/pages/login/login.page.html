@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <main>
+    <section class="cover">
+      <img class="logo" src="../../../assets/aromia_logos/logo.svg" alt="">
+    </section>
+    <section class="form">
+
+      <div class="mt-16">
+        <p class="m-0 body-lg"><b>Bienvenido a la app de Aromía</b></p>
+        <p class="m-0 body-sm text-align-center">Puedes iniciar sesión o registrarse</p>
+      </div><br>
+      
+
+      <form class="form-container" (ngSubmit)="login()" [formGroup]="form">
+        <ion-input formControlName="email" mode="md" shape="round" label="Correo" label-placement="floating" fill="outline" placeholder="Enter text" placeholder="Escribir mi correo electrónico"></ion-input>
+
+        <ion-input formControlName="password" mode="md" shape="round" label="Contraseña" label-placement="floating" fill="outline" type="password" placeholder="Escribir contraseña">
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+
+
+        <ion-button type="submit" shape="round" mode="ios">Ingresar</ion-button>
+      </form>
+      <br><br>
+
+
+      <p>No tienes cuenta aun? <span (click)="goTo('register')" class="bold color-primary">Registrarse</span></p>
+    </section>
+  </main>
+</ion-content>

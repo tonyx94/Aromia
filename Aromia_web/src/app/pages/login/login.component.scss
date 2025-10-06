@@ -1,0 +1,160 @@
+.container-login {
+    padding: 1.4em;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: calc(100dvh - 0.7em);
+    .main {
+        height: 100%;
+        display: flex;
+        overflow: hidden;
+        flex-direction: row;
+        .segment  {
+            width: 100%;
+            border-radius: 12px;
+        }
+
+        .cover {
+            display: flex;
+            padding: 1.4em;
+            flex-direction: column;
+            justify-content: space-between;
+            background: url('../../../assets/cover.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            .top-cover {
+                display: flex;
+                align-items: center;
+                flex-direction: row;
+                justify-content: space-between;
+
+                .chip {
+                    font-weight: 500;
+                    padding: 2px 20px;
+                    font-size: 0.7em;
+                    border-radius: 12px;
+                    text-align: center;
+                    backdrop-filter: blur(5px);
+                    background: rgba(255, 255, 255, 0.2);
+                }
+            }
+            .image-logo {
+                width: 120px;
+                img {
+                    height: auto;
+                    width: 100%;
+                    object-fit: contain;
+                    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.3));
+                }
+            }
+            .bottom-text-login {
+                display: flex;
+                padding: 2em;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                h1 {
+                    font-weight: 500;
+                    line-height: 1em;
+                    text-align: center;
+                    font-size: clamp(1.2rem, 2vw + 0.5rem, 2.5rem);
+                } 
+            }
+        }
+
+        .form {
+            gap: 1.3em;
+            padding: 3em;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+
+            input, p-password {
+                width: clamp(200px, 2vw + 0.5rem, 360px);
+                background: rgba(0, 0, 0, 0.2)
+            }
+
+            .welcome {
+                line-height: 1.4em;
+                text-align: center;
+                margin-bottom: 1em;
+                h2 {
+                    
+                    margin: 0;
+                    font-weight: 600;
+                    line-height: 1em;
+                    font-size: clamp(1.6rem, 3vw + 0.5rem, 2.2rem);
+                }
+            }
+        }
+    }
+}
+
+.temp-password-display {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+      border: 2px dashed #28a745;
+    }
+    
+    .temp-password {
+      font-family: 'Courier New', monospace;
+      font-size: 18px;
+      font-weight: bold;
+      color: #007bff;
+      background: white;
+      padding: 5px 10px;
+      border-radius: 3px;
+      border: 1px solid #dee2e6;
+    }
+    
+    .password-reset-section {
+      margin: 20px 0;
+      padding: 15px;
+      border-top: 1px solid #dee2e6;
+    }
+    
+.dots {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    align-items: center;
+
+    .dot {
+        width: 38px; 
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(195, 195, 195, 0.2);
+    }
+    .active {
+        background: rgb(221, 221, 221);
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .container-login {
+        .main {
+            display: block;
+            .segment {
+                position: absolute;
+                width: calc(100% - 3em);
+                height: calc(100dvh - 0.7em);
+            }
+            .cover {
+                height: 100%;
+            }
+            .form {
+                //width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(5px);
+            }
+            .top-cover, .bottom-text-login {
+                z-index: 99;
+            }
+        }
+    }
+}

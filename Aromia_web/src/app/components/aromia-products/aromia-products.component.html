@@ -1,0 +1,5 @@
+<div class="flex flex-row gap-4 justify-center w-full">  
+     <p-autocomplete [disabled]="isLoading" fluid class="w-full" [inputStyle]="{ width: '100%' }" [(ngModel)]="product_name" placeholder="Nombre del producto" [suggestions]="filteredProducts" (completeMethod)="filterProducts($event)" optionLabel="name" />
+     <p-button [loading]="isLoading" (onClick)="addProduct()" icon="pi pi-plus" [rounded]="true" severity="primary" />
+</div>
+<p class="color-danger">{{ errorMessage }}</p> 

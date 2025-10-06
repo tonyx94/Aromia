@@ -1,0 +1,39 @@
+<p-metergroup *ngIf="response" [value]="response.values" labelPosition="start">
+    <ng-template #label>
+        <div class="flex flex-wrap gap-4">
+            <ng-container *ngFor="let meterItem of response.values; let index = index">
+                <p-card class="flex-1"
+                    [style]="{ background: 'linear-gradient(243deg, ' + meterItem.color2 + ' 0%,  var(--p-content-background) 22%)'  }"
+                    styleClass="shadow-none"> 
+                    <div class="flex justify-between gap-8">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-surface-500 dark:text-surface-400 text-sm"><span class="body-sm color-medium">Cotizaciones</span>  <br> {{ meterItem.label }}</span>
+                            <span class="font-bold text-lg">₡{{ meterItem.amount | currency: '.' :'symbol':'1.0'}}</span>
+                        </div>
+                        <span class="w-8 h-8 rounded-full inline-flex justify-center items-center text-center"
+                            [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
+                            <!-- <i [class]="meterItem.icon"></i> -->
+                             <span class="bold">{{meterItem.icon}}</span>
+                        </span>
+                    </div>
+                </p-card>
+            </ng-container>
+        </div>
+    </ng-template>
+    <ng-template #meter let-value let-class="class" let-width="size">
+        <span *ngIf="value.label != 'Facturado'" [class]="class"
+            [style]="{ background: 'linear-gradient(to right, ' + value.color2 + ', ' + value.color2 + ')', width: width }"></span>
+    </ng-template>
+    <ng-template #start let-totalPercent="totalPercent">
+        <div class="flex justify-between mt-4 mb-0 relative">
+            <span>
+                <span>Pendientes de facturar</span>
+                <span class="mx-2 body-sm color-medium">(pendientes + sin confirmar)</span>
+            </span>
+            <span [style]="{ width: response.percentage + '%' }" class="absolute text-right">{{ response.percentage
+                }}%</span>
+            <span class="font-medium">{{ response.total }}</span>
+        </div>
+    </ng-template>
+
+</p-metergroup>

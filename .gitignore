@@ -1,28 +1,162 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+# ============================================
+# GITIGNORE PARA AROMIA
+# Backend (NestJS) + Frontend (Angular) + App (Ionic)
+# ============================================
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+# ===== DEPENDENCIAS =====
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
 
-# Environment files
-/.env
+# ===== ARCHIVOS DE ENTORNO =====
+**/.env
+**/.env.local
+**/.env.*.local
+**/.env.development
+**/.env.production
+**/.env.test
 
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
+# ===== COMPILADOS Y BUILD =====
+**/dist/
+**/build/
+**/.next/
+**/out/
+**/.cache/
+**/.parcel-cache/
 
-# TypeScript cache
-*.tsbuildinfo
+# ===== ANGULAR ESPECÍFICO =====
+Aromia_web/.angular/
+Aromia_web/dist/
+Aromia_web/.angular/cache/
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# ===== IONIC/CAPACITOR ESPECÍFICO =====
+Aromia_app/.angular/
+Aromia_app/www/
+Aromia_app/platforms/
+Aromia_app/plugins/
+Aromia_app/ios/
+Aromia_app/android/
+Aromia_app/.sourcemaps/
+
+# ===== NESTJS ESPECÍFICO =====
+Aromia_backend/dist/
+Aromia_backend/.env
+
+# ===== LOGS =====
+**/logs/
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/lerna-debug.log*
+**/pnpm-debug.log*
+
+# ===== SISTEMAS OPERATIVOS =====
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+**/.DS_Store
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===== IDEs Y EDITORES =====
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (WebStorm, IntelliJ)
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# ===== TESTING =====
+**/coverage/
+**/.nyc_output/
+**/.coverage/
+**/test-results/
+**/*.lcov
+**/.jest/
+
+# ===== TYPESCRIPT =====
+**/*.tsbuildinfo
+**/.tscache/
+
+# ===== MOBILE DEVELOPMENT =====
+# Android
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+local.properties
+.gradle/
+.idea/
+*.hprof
+
+# iOS
+*.ipa
+*.dSYM.zip
+*.dSYM
+xcuserdata/
+*.xcworkspace/
+DerivedData/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# ===== CAPACITOR =====
+**/capacitor.config.ts.bak
+**/.capacitor/
+
+# ===== TEMPORALES =====
+**/*.tmp
+**/*.temp
+**/*.swp
+**/*.swo
+**/tmp/
+**/temp/
+
+# ===== OTROS =====
+**/.sass-cache/
+**/connect.lock
+**/typings/
+**/.eslintcache
+**/.stylelintcache

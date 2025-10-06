@@ -1,0 +1,37 @@
+<div class="a-sidebar bg-surface-50 dark:bg-surface-900">
+    <div class="a-sidebar-content">
+        <div class="logo">
+            <img src="aromia_logos/a_logo_green.svg" alt="">
+        </div>
+
+        @if(buttons) {
+        <div class="a-sidebar-buttons">
+            <ng-container *ngFor="let b of buttons">
+                <p-button *ngIf="b.active" (click)="navigate(b)" [pTooltip]="b.name" tooltipPosition="right" [icon]="b.icon"
+                    [severity]="b.selected? 'primary':'secondary'" [variant]="getStatusButton(b.selected)" />
+            </ng-container>
+        </div>
+        }
+ 
+
+    </div>
+
+
+    <div *ngIf="user" class="a-sidebar-footer-buttons">
+        <p-button (click)="op.toggle($event)" icon="pi pi-cog" severity="secondary" variant="text" class="mb-2" />
+        <p-divider />
+
+            <p-avatar size="large" [label]="getLetterName(user.name+' '+user.lastname )"
+                        shape="circle"
+                        [style]="{'background-color': getColorForUser(user.name+' '+user.lastname ),'color': getTextColorFromHSL(getColorForUser(user.name+' '+user.lastname ))}"
+                        shape="circle" />
+
+
+        <p-popover #op>
+            <div class="flex flex-col gap-4 ">
+                <p-button (onClick)="signup()" label="Cerrar sesión" icon="pi pi-sign-out" variant="text" severity="danger" />
+            </div>
+        </p-popover>
+    </div>
+
+</div>

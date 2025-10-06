@@ -1,0 +1,26 @@
+.temp-password-display {
+      padding: 15px;
+      border-radius: 5px;
+      margin: 10px 0;
+      border: 1px solid var(--p-inputtext-border-color);
+    }
+    
+    .temp-password {
+        width: 360px;
+        display: flex;
+        margin: 12px 0;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 3px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid var(--p-inputtext-border-color);
+    }
+    
+    .password-reset-section {
+      margin: 20px 0;
+      padding: 15px;
+      border-top: 1px solid #dee2e6;
+    }

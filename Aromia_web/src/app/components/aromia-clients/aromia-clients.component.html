@@ -1,0 +1,92 @@
+<div class="p-26">
+    <form [formGroup]="formClient!" class="p-fluid">
+        <p-select  [options]="register_type" formControlName="type" optionLabel="name" optionValue="value"
+            placeholder="Seleccione el tipo de cliente" class="w-60" /> <br><br>
+
+
+        <p-divider />
+
+        <!-- Campos para Cliente Físico -->
+        <div class="flex flex-col gap-6" *ngIf="formClient?.get('type')?.value === 'fisico'">
+            <div class="flex flex-row gap-4">
+                <p-floatlabel variant="on">
+                    <input formControlName="identity" pInputText id="identity" autocomplete="off" class="w-60" />
+                    <label for="identity">N. Identificación</label>
+                </p-floatlabel>
+                <!-- <input pInputText formControlName="identity" placeholder="Cédula" class="w-60" /> -->
+
+
+                <p-floatlabel variant="on">
+                    <p-select id="company" [options]="companies" formControlName="company" optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"  class="w-60">
+                    <ng-template #selectedItem let-selectedOption>
+                        <div class="flex items-center gap-2 w-60">
+                            <div class="company-name-select w-60">
+                               <p> {{ selectedOption.name }}</p>
+                            </div>
+                        </div> 
+                    </ng-template>
+                    <ng-template let-company #item>
+                        <div class="flex items-center gap-2 w-60">
+                            <div>{{ company.name }}</div>
+                        </div>
+                    </ng-template>  
+                </p-select>
+                    <label for="company">Empresa</label>
+                </p-floatlabel>
+                
+            </div>
+            <div class="flex flex-row gap-4">
+                <p-floatlabel variant="on">
+                    <input formControlName="name" pInputText id="name" autocomplete="off" class="w-60" />
+                    <label for="name">Nombre</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <input formControlName="lastname" pInputText id="lastname" autocomplete="off" class="w-60" />
+                    <label for="lastname">Apellido</label>
+                </p-floatlabel>
+                <!-- <input pInputText formControlName="name" placeholder="Nombre" class="w-60" />
+                <input pInputText formControlName="lastname" placeholder="Apellido" class="w-60" /> -->
+            </div>
+            <div class="flex flex-row gap-4">
+                <p-floatlabel variant="on">
+                    <input formControlName="phone" pInputText id="phone" autocomplete="off" class="w-60" />
+                    <label for="phone">Teléfono</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <input formControlName="email" pInputText id="email" autocomplete="off" class="w-60" />
+                    <label for="email">Correo</label>
+                </p-floatlabel>
+                <!-- <input pInputText formControlName="phone" placeholder="Teléfono" class="w-60" />
+                <input pInputText formControlName="email" placeholder="Correo" class="w-60" /> -->
+            </div>
+
+
+            <p-floatlabel variant="on">
+                    <input formControlName="address" pInputText id="address" autocomplete="off" class="w-full" />
+                    <label for="address">Dirección</label>
+            </p-floatlabel>
+            <br>
+            <!-- <input pInputText formControlName="address" placeholder="Dirección" class="w-60" /><br> -->
+              
+
+            <p-button [loading]="isLoading" [disabled]="isLoading"  (onClick)="addClient()" label="Agregar cliente físico" />
+            
+            <p-message *ngIf="messageError" severity="error">{{messageError}}</p-message>
+        </div>
+
+        <!-- Empresa -->
+        <div class="flex flex-col gap-5" *ngIf="formClient?.get('type')?.value === 'empresa'">
+            <input pInputText formControlName="name" placeholder="Nombre de la empresa" class="w-60" />
+            <input pInputText formControlName="identity" placeholder="Cédula jurídica" class="w-60" />
+            <input pInputText formControlName="phone" placeholder="Teléfono" class="w-60" />
+            <input pInputText formControlName="email" placeholder="Correo" class="w-60" />
+            <input pInputText formControlName="address" placeholder="Dirección" class="w-60" /><br>
+
+            <p-button  [loading]="isLoading" [disabled]="isLoading"  (onClick)="addCompany()"  label="Agregar empresa" /> 
+            
+            <p-message *ngIf="messageError" severity="error">{{messageError}}</p-message>
+        </div>
+    </form>
+
+
+</div>

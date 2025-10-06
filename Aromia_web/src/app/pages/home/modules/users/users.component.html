@@ -1,0 +1,202 @@
+<div class="p-26">
+    <form [formGroup]="form!" (ngSubmit)="submit('create')" class="flex flex-col gap-4 p-fluid">
+
+        <p class="color-medium body-sm">Registrar nuevo usuario</p>
+        <div class="flex flex-row gap-6">
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="name" formControlName="name" autocomplete="off" />
+                <label for="name">Nombre</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="lastname" formControlName="lastname" autocomplete="off" />
+                <label for="lastname">Apellido</label>
+            </p-floatlabel>
+
+        </div>
+
+        <div class="flex flex-row gap-6">
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="phone" formControlName="phone" autocomplete="off" />
+                <label for="phone">Teléfono</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="emailCompany" formControlName="emailCompany" autocomplete="off" />
+                <label for="emailCompany">Email corporativo</label>
+            </p-floatlabel>
+        </div>
+
+
+
+        <div class="flex flex-row gap-6">
+            <div class="flex flex-1">
+                <p-multiselect class="w-full" [options]="roles" display="chip" formControlName="rol" optionLabel=""
+                    placeholder="Seleccione los roles" [maxSelectedLabels]="5" [fluid]="true" />
+            </div>
+
+
+            <div class="flex flex-1">
+                <p-button class="w-full" class="flex flex-1" type="submit" label="Guardar" />
+                @if(isLoading) {
+                <p-progress-spinner strokeWidth="3" fill="transparent" animationDuration=".5s"
+                    [style]="{ width: '32px', height: '32px' }" />
+                }
+            </div>
+
+        </div>
+
+
+    </form><br><br>
+
+    <p-divider></p-divider>
+
+    <p-toast />
+    <p-confirmDialog></p-confirmDialog>
+
+    <div *ngIf="!users" class="flex flex-row p-26 justify-center align-middle">
+        <p-progress-spinner strokeWidth="3" fill="transparent" animationDuration=".5s"
+            [style]="{ width: '32px', height: '32px' }" />
+    </div>
+
+    <!-- <p-floatlabel variant="on">
+        <input pInputText id="on_label" (ngModelChange)="filterUser($event)" [(ngModel)]="search_user_text" autocomplete="off" />
+        <label for="on_label">On Label</label>
+    </p-floatlabel> -->
+
+    <p-table #users_tbl *ngIf="users" [value]="usersFiltered" [paginator]="true" [rows]="users.length"
+        [responsiveLayout]="'scroll'" [globalFilterFields]="['name', 'lastname', 'user', 'status']" dataKey="user_id">
+        <ng-template #caption>
+            <div class="flex">
+                <p-iconfield iconPosition="left" class="ml-auto">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text"
+                        (input)="    users_tbl.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Buscar.." />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th></th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Estado</th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+            <tr>
+                <td>
+                    <div class="flex items-center gap-2">
+                        <p-avatar [label]="getLetterName(user.firstName+' '+user.lastName )" class="mr-2" shape="circle"
+                            [style]="{'background-color': getColorForUser(user.firstName+' '+user.lastName),'color': getTextColorFromHSL(getColorForUser(user.firstName+' '+user.lastName))}"
+                            shape="circle" />
+                    </div>
+                </td>
+                <td (click)="showDialog(true, user)">{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</td>
+      
+                <td (click)="showDialog(true, user)">{{ user.email }}</td>
+
+                <td (click)="showDialog(true, user)">{{ user.phone }}</td>
+                
+
+
+                <td (click)="showDialog(true, user)">
+                    {{ user.role.name | titlecase }}
+                </td>
+
+                <td (click)="showDialog(true, user)">
+                    <p-tag [value]="user.isActive ? 'Activo' : 'Inactivo'"
+                        [severity]="user.isActive ? 'success' : 'danger'" />
+                </td>
+
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog *ngIf="formUpdate" header="Actualización" [(visible)]="visible" [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '50vw', height: '80vh' }"
+    [draggable]="false" [resizable]="false">
+    <form [formGroup]="formUpdate!" (ngSubmit)="submit('update')" class="flex flex-col gap-4 p-fluid">
+
+        <p class="color-medium body-sm">Actualizar usuario </p>
+        <div class="flex flex-row gap-6">
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="name" formControlName="name" autocomplete="off" />
+                <label for="name">Nombre</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="lastname" formControlName="lastname" autocomplete="off" />
+                <label for="lastname">Apellido</label>
+            </p-floatlabel>
+
+        </div>
+
+        <div class="flex flex-row gap-6">
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="phone" formControlName="phone" autocomplete="off" />
+                <label for="phone">Teléfono</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="flex flex-1" variant="on">
+                <input class="w-full" pInputText id="emailCompany" formControlName="emailCompany" autocomplete="off" />
+                <label for="emailCompany">Email corporativo</label>
+            </p-floatlabel>
+        </div>
+
+
+
+        <div class="flex flex-row gap-6">
+            <div class="flex flex-1">
+                <p-multiselect class="w-full" [options]="roles" display="chip" formControlName="rol" optionLabel=""
+                    placeholder="Seleccione los roles" [maxSelectedLabels]="5" [fluid]="true" />
+            </div>
+
+
+            <div class="flex flex-1">
+                <p-button class="w-full" class="flex flex-1" type="submit" label="Actualizar" />
+                @if(isLoading) {
+                <p-progress-spinner strokeWidth="3" fill="transparent" animationDuration=".5s"
+                    [style]="{ width: '32px', height: '32px' }" />
+                }
+            </div>
+
+
+            
+
+        </div><br>
+
+        <div class="flex flex-col align-middle justify-center gap-3">
+            <p-button variant="outlined"  (click)="resetUserPassword()" [disabled]="resetting"
+                *ngIf="!tempPasswordGenerated">
+                {{ resetting ? 'Generando...' : '🔑 Restablecer Contraseña' }}
+            </p-button>
+
+            <div *ngIf="tempPasswordGenerated" class="temp-password-info">
+                <div class="alert alert-success">
+                    <p class="body-sm color-medium">Contraseña Temporal Generada</p>
+                    <div>
+                        <div class="temp-password"  (click)="copyToClipboard()">
+                            <span>{{ tempPassword }}</span>
+
+                            <i class="pi pi-clone color-medium" style="font-size: 1rem"></i>
+                        </div>
+                        
+                    </div>
+                    <p><small>💡 El usuario deberá cambiar su contraseña al iniciar sesión</small></p>
+                    <p><small>⏰ Válido por 24 horas</small></p>
+                    
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+</p-dialog>

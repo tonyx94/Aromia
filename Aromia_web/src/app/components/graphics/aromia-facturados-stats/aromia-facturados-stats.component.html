@@ -1,0 +1,49 @@
+<div class="container-graph">
+
+    <div class="flex flex-row justify-between items-center h-full" *ngIf="stats">
+
+
+
+        <div class="flex flex-col justify-between h-full">
+            <p class="body-sm color-medium">Cotizaciones facturadas</p>
+            <div>
+                <div class="flex flex-row items-center gap-4">
+
+                    <p><span class="bold body-lg">{{ stats.totalAcumulado }} </span> <span
+                            class="pi pi-money-bill body-md color-medium"></span></p>
+
+                </div>
+
+                <p class="body-sm color-medium">
+                    Cantidad de ventas
+                </p>
+
+                <!-- <div>
+                    <p *ngIf="!stats.promedioCrecimiento.toString().includes('-')" class="body-sm color-success">
+                        {{stats.promedioCrecimiento}} <span class="pi pi-arrow-up-right"></span></p>
+                    <p *ngIf="stats.promedioCrecimiento.toString().includes('-')" class="body-sm color-danger">
+                        {{stats.promedioCrecimiento}} <span class="pi pi-arrow-down-right"></span></p>
+
+
+                </div> -->
+            </div>
+        </div>
+
+
+        <div class="w-3/6 h-full" >
+            <div class="flex flex-row justify-end">
+                    <p *ngIf="!stats.promedioCrecimiento.toString().includes('-')" class="body-sm color-success glass glass-success">
+                        {{stats.promedioCrecimiento}}% <span class="body-sm pi pi-arrow-up-right"></span></p>
+                    <p *ngIf="stats.promedioCrecimiento.toString().includes('-')" class="body-sm color-danger glass glass-danger">
+                        {{stats.promedioCrecimiento}}% <span class="body-sm pi pi-arrow-down-right"></span></p>
+
+
+                </div>
+            <p-chart height="90" type="line" [data]="data" [options]="options" />
+        </div>
+
+
+
+    </div>
+
+</div>

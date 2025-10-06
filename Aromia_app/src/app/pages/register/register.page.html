@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button text="Atrás" defaultHref="../"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="p-26">
+    <p class="body-md">
+      Debes ingresar tus datos personales
+    </p>
+
+    <form class="container" [formGroup]="form" (ngSubmit)="register()">
+      <ion-input formControlName="firstName" mode="md" shape="round" label="Nombre" label-placement="floating" fill="outline" placeholder="Escribir mi nombre"></ion-input>
+
+      <ion-input formControlName="lastName" mode="md" shape="round" label="Apellido" label-placement="floating" fill="outline" placeholder="Escribir mi apellido"></ion-input>
+
+      <ion-input formControlName="email" mode="md" shape="round" label="Correo" label-placement="floating" fill="outline" placeholder="Escribir mi correo electrónico"></ion-input>
+
+      <ion-input formControlName="phone" mode="md" shape="round" label="Teléfono" label-placement="floating" fill="outline" placeholder="Escribir mi número de teléfono"></ion-input>
+
+      <ion-input formControlName="dateOfBirth" mode="md" shape="round" label="Fecha de nacimiento" label-placement="floating" fill="outline" type="date" placeholder="Seleccionar fecha de nacimiento"></ion-input>
+
+      <ion-input formControlName="password" mode="md" shape="round" label="Contraseña" label-placement="floating" fill="outline" type="password" placeholder="Escribir contraseña">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+
+      <ion-input formControlName="confirmPassword" mode="md" shape="round" label="Confirmar contraseña" label-placement="floating" fill="outline" type="password" placeholder="Escribir contraseña">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+
+      <ion-button type="submit" shape="round" mode="ios">Registrarse</ion-button>
+    </form><br>
+
+    <p class="text-align-center color-medium body-sm">O bien puedes</p>
+
+    <br>
+    <ion-button expand="block" color="danger" fill="outline" shape="round">
+      <ion-icon slot="start" name="logo-google"></ion-icon>
+      Continuar con Google 
+    </ion-button>
+    <ion-button expand="block" color="tertiary" fill="outline" shape="round">
+      <ion-icon slot="start" name="logo-facebook"></ion-icon>
+      Continuar con Facebook
+    </ion-button>
+  </div>
+</ion-content>

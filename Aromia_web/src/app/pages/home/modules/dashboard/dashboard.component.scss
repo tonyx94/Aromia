@@ -1,0 +1,26 @@
+.container-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr; 
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  
+  > :nth-child(1) {
+    grid-column: 1 / -1;
+  }
+
+
+  > :nth-child(2),
+  > :nth-child(3) {
+    @media (min-width: 768px) {
+      grid-column: auto;
+    }
+  }
+
+  > :nth-child(n + 4) {
+    grid-column: 1 / -1;
+  }
+}

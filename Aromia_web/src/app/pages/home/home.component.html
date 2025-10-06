@@ -1,0 +1,12 @@
+
+
+ <div class="home">
+    <aromia-sidebar [class.show]="sidebarVisible"></aromia-sidebar>
+    <div class="modules">
+        <div class="header">
+            <p-button class="menu-btn" (onClick)="toggleSidebar()" icon="pi pi-bars" [rounded]="true" severity="secondary" [outlined]="true" />
+    
+     </div>
+        <router-outlet></router-outlet>
+    </div>
+</div>
