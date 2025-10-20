@@ -9,7 +9,8 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Role } from '../../roles/entities/role.entity';
-import { OrderStatusHistory } from 'src/modules/order-status-history/entities/order-status-history.entity';
+import { OrderStatusHistory } from '../../order-status-history/entities/order-status-history.entity';
+
 
 @Entity('admin_users')
 export class AdminUser {

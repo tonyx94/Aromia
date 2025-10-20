@@ -33,6 +33,7 @@ import { AuthModule } from './auth/auth.module';
       entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
       synchronize: true, 
       logging: false, 
+      dateStrings: false,
     }),
     RolesModule, AdminUsersModule, CustomersModule, CustomerAddressesModule, CustomerAddressesModule, ProductCategoriesModule, ProductsModule, OrdersModule, OrderItemsModule, OrderStatusesModule, OrderStatusHistoryModule, ShoppingCartModule, SystemSettingsModule, AuthModule],
   controllers: [AppController],

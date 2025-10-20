@@ -3,13 +3,13 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-
-@ApiTags('Products')
-@Controller('products')
-export class ProductsController {
+ 
+@ApiTags('Products')   
+@Controller('products')   
+export class ProductsController { 
   constructor(private readonly productsService: ProductsService) {}
 
-  @Post()
+  @Post() 
   @ApiOperation({ summary: 'Crear un nuevo producto' })
   @ApiResponse({ status: 201, description: 'Producto creado correctamente' })
   create(@Body() dto: CreateProductDto) {
@@ -22,7 +22,7 @@ export class ProductsController {
   findAll() {
     return this.productsService.findAll();
   }
-
+ 
   @Get(':id')
   @ApiOperation({ summary: 'Obtener un producto por ID' })
   @ApiResponse({ status: 200, description: 'Producto encontrado' })

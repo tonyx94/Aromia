@@ -37,23 +37,28 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadComponent: () => import('./pages/home/modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
-        title: 'Dashboard'
+        title: 'Aromia - Dashboard'
       },
    
       {
         path: 'maintenance',
         loadComponent: () => import('./pages/home/modules/maintenance/maintenance.component').then(m => m.MaintenanceComponent),
-        title: 'Mantenimiento'
+        title: 'Aromia - Mantenimiento'
       },
       {
         path: 'users',
         loadComponent: () => import('./pages/home/modules/users/users.component').then(m => m.UsersComponent),
-        title: 'Usuarios'
+        title: 'Aromia - Usuarios'
+      },
+      {
+        path: 'products',
+        loadComponent: () => import('./pages/home/modules/products/products.component').then(m => m.ProductsComponent),
+        title: 'Aromia - Productos'
       },
        {
         path: 'home',
         loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
-        title: 'Inicio'
+        title: 'Aromia - Inicio'
       },
   
     ]

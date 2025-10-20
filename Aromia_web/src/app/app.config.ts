@@ -4,15 +4,15 @@ import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/c
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import MyTheme from '../myTheme'; // Asegúrate que el path sea correcto
+import MyTheme from '../myTheme';
 import { routes } from './app.routes';
 
 import { registerLocaleData } from '@angular/common';
 import { LOCALE_ID } from '@angular/core';
 import localeEs from '@angular/common/locales/es';
 
-// Registrar idioma español
 registerLocaleData(localeEs);
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,13 +31,12 @@ export const appConfig: ApplicationConfig = {
         dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
         dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
-        //translations
     },
       theme: {
         preset: MyTheme,
         options: {
           ripple: true,
-          darkModeSelector: '.my-app-dark' // No scheme aquí
+          darkModeSelector: '.my-app-dark' 
         } 
       }
     }),

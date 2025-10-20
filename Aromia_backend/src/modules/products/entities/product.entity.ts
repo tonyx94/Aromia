@@ -1,6 +1,4 @@
-import { OrderItem } from 'src/modules/order-items/entities/order-item.entity';
-import { ProductCategory } from 'src/modules/product-categories/entities/product-category.entity';
-import { ShoppingCart } from 'src/modules/shopping-cart/entities/shopping-cart.entity';
+
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,6 +8,10 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { OrderItem } from '../../order-items/entities/order-item.entity';
+import { ProductCategory } from '../../product-categories/entities/product-category.entity';
+import { ShoppingCart } from '../../shopping-cart/entities/shopping-cart.entity';
+
 
 @Entity('products')
 export class Product {
@@ -39,15 +41,16 @@ export class Product {
 
   @Column({ default: true })
   is_active: boolean;
-
-  @CreateDateColumn({ type: 'timestamp' })
+ 
+  
+ @CreateDateColumn({ type: 'timestamp', nullable: true })
   created_at: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
   updated_at: Date;
 
   @ManyToOne(() => ProductCategory, (category) => category.products, { eager: true })
-  category: ProductCategory;
+  category: ProductCategory; 
 
   @OneToMany(() => OrderItem, (item) => item.product)
   orderItems: OrderItem[];

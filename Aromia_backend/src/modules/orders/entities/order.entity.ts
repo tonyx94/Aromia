@@ -1,8 +1,4 @@
-import { CustomerAddress } from 'src/modules/customer-addresses/entities/customer-address.entity';
-import { Customer } from 'src/modules/customers/entities/customer.entity';
-import { OrderItem } from 'src/modules/order-items/entities/order-item.entity';
-import { OrderStatusHistory } from 'src/modules/order-status-history/entities/order-status-history.entity';
-import { OrderStatus } from 'src/modules/order-statuses/entities/order-status.entity';
+
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -12,6 +8,11 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { CustomerAddress } from '../../customer-addresses/entities/customer-address.entity';
+import { Customer } from '../../customers/entities/customer.entity';
+import { OrderItem } from '../../order-items/entities/order-item.entity';
+import { OrderStatusHistory } from '../../order-status-history/entities/order-status-history.entity';
+import { OrderStatus } from '../../order-statuses/entities/order-status.entity';
 
 
 @Entity('orders')

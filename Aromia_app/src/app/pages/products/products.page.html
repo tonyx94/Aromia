@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <aromia-header></aromia-header>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar (ionInput)="handleInput($event)" placeholder="Buscar producto" mode="ios"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    @for (product of productsFiltered; track $index) {
+    <ion-item (click)="setOpenProductDetail(true, product)" class="p-4" lines="none" [button]="true" detail="true">
+      <ion-thumbnail slot="start">
+        <img [src]="product.image_url" alt="{{ product.name }}" />
+      </ion-thumbnail>
+      <div class="p-12">
+        <p class="m-0 bold body-md">{{ product.name }}</p>
+        <p class="m-0 color-medium body-sm description">{{ product.description }}</p>
+        <p class="m-0 bold color-primary body-m">{{ product.price | currency }}</p>
+      </div>
+    </ion-item>
+    }
+
+  </ion-list>
+</ion-content>
+
+
+<ion-modal [isOpen]="isProductDetailOpen">
+  <ng-template>
+
+    <ion-content class="p-26">
+      <div class="image mb-16">
+        <ion-button color="light" (click)="setOpenProductDetail(false)" shape="round">
+          <ion-icon color="dark" slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+        <img [src]="productSelected.image_url" alt="">
+      </div>
+      <div class="px-20 py-12">
+        <h4 class="bold color-primary">{{ productSelected.name }}</h4>
+        <p class="mb-12 color-medium body-sm">
+          {{ productSelected.description }}
+        </p>
+        <p class="color-primary body-xl bold text-align-end">
+          {{ productSelected.price | currency: '₡' }}
+        </p>
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>

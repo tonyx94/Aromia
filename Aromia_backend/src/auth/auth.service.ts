@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AdminUsersService } from 'src/modules/admin-users/admin-users.service';
-import { CustomersService } from 'src/modules/customers/customers.service';
+import { AdminUsersService } from '../modules/admin-users/admin-users.service';
+import { CustomersService } from '../modules/customers/customers.service';
 
 
 
@@ -39,7 +39,7 @@ export class AuthService {
     };
     console.log(user)
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload), 
       user: {
         id: user.id,
         name: user.firstName + " " + user.lastName,

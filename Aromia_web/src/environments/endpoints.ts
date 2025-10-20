@@ -17,5 +17,12 @@ export const ENDPOINTS = {
     UPDATE: (id: string) => `admin-users/${id}`,
     DELETE: (id: string) => `admin-users/${id}`,
   },
+  PRODUCTS: {
+    GET_ALL: 'products',
+    GET_BY_ID: (id: string) => `products/${id}`,
+    CREATE: 'products',
+    UPDATE: (id: string) => `products/${id}`,
+    DELETE: (id: string) => `products/${id}`,
+  }
    
 };

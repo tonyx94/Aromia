@@ -25,11 +25,6 @@ export class CreateProductDto {
   @IsPositive()
   price: number;
 
-  @ApiProperty({ example: 1, required: false })
-  @IsOptional()
-  @IsInt()
-  category_id?: number;
-
   @ApiProperty({ example: 50, default: 0 })
   @IsOptional()
   @IsInt()

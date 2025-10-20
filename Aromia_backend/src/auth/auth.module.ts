@@ -3,8 +3,9 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 
 import { JwtModule } from '@nestjs/jwt';
-import { AdminUsersModule } from 'src/modules/admin-users/admin-users.module';
-import { CustomersModule } from 'src/modules/customers/customers.module';
+import { AdminUsersModule } from '../modules/admin-users/admin-users.module';
+import { CustomersModule } from '../modules/customers/customers.module';
+
 
 @Module({
   imports: [
