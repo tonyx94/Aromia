@@ -1,26 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonThumbnail, IonSearchbar, IonModal, IonButtons, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonThumbnail, IonSearchbar, IonModal, IonButtons, IonButton, IonIcon, IonBadge, IonFooter, ToastController } from '@ionic/angular/standalone';
 import { AromiaApi } from 'src/app/services/request';
 import { Router } from '@angular/router';
 import { ENDPOINTS } from 'src/environments/endpoints';
 import { AromiaHeaderComponent } from 'src/app/components/aromia-header/aromia-header.component';
 import { Product } from 'src/app/models/products';
 import { addIcons } from 'ionicons';
-import { closeOutline } from 'ionicons/icons';
+import { closeOutline,addOutline, removeOutline } from 'ionicons/icons';
+import { AromiaCartComponent } from '../../components/aromia-cart/aromia-cart.component';
+
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.page.html',
   styleUrls: ['./products.page.scss'],
   standalone: true,
-  imports: [IonIcon, IonButton, IonModal, IonSearchbar, IonItem, IonList, IonContent, IonHeader, CommonModule, FormsModule, AromiaHeaderComponent, IonThumbnail, IonToolbar]
+  imports: [IonFooter, IonBadge, IonIcon, IonButton, IonModal, IonSearchbar, IonItem, IonList, IonContent, IonHeader, CommonModule, FormsModule, AromiaHeaderComponent, IonThumbnail, IonToolbar, IonButtons, AromiaCartComponent]
 })
 export class ProductsPage implements OnInit {
 
-  constructor(private api: AromiaApi, private route: Router) {
-    addIcons({closeOutline});
+  constructor(private api: AromiaApi,private local: StorageService, private toastController: ToastController, private route: Router) {
+    addIcons({closeOutline,removeOutline,addOutline});
   }
 
 
@@ -28,14 +30,35 @@ export class ProductsPage implements OnInit {
   productsFiltered: Product[] = [];
   productSelected!: Product;
   isProductDetailOpen: boolean = false;
+  isCartOpen: boolean = false;
 
   ngOnInit() {
     this.api.get<Product[]>(ENDPOINTS.PRODUCTS.GET_ALL).subscribe((products) => {
+      products.forEach((product: Product) => product.cant = 0);
       console.log('Productos obtenidos:', products);
-      this.products = products;
+      this.products = [...products];
       this.productsFiltered = [...products];
+
+       this.local.get<Product[]>(StorageKey.Cart).then((c) => {
+        if(c) {
+          this.setCartInProducts(c)
+        }
+      })
     });
   }
+
+  setCartInProducts(c: Product[]) {
+    c.forEach(item => {
+      const product = this.products.find(p => p.id === item.id);
+      const productFiltered = this.productsFiltered.find(p => p.id === item.id);
+      if (product) {
+        product.cant = item.cant;
+      }
+      if (productFiltered) {
+        productFiltered.cant = item.cant;
+      }
+    });
+  }
 
   setOpenProductDetail(isOpen: boolean, product?: Product) {
     this.isProductDetailOpen = isOpen;
@@ -44,6 +67,10 @@ export class ProductsPage implements OnInit {
     }
     
   }
+
+  setOpenCart(isOpen: any) {
+    this.isCartOpen = isOpen;
+  }
 
   handleInput(event: Event) {
     const target = event.target as HTMLIonSearchbarElement;
