@@ -10,6 +10,7 @@ import { Product } from 'src/app/models/products';
 import { addIcons } from 'ionicons';
 import { closeOutline,addOutline, removeOutline } from 'ionicons/icons';
 import { AromiaCartComponent } from '../../components/aromia-cart/aromia-cart.component';
+import { StorageService, StorageKey } from '../../services/storage.service';
 
 
 @Component({
@@ -49,8 +50,8 @@ export class ProductsPage implements OnInit {
 
   setCartInProducts(c: Product[]) {
     c.forEach(item => {
-      const product = this.products.find(p => p.id === item.id);
-      const productFiltered = this.productsFiltered.find(p => p.id === item.id);
+      const product = this.products.find((p:Product) => p.id === item.id);
+      const productFiltered = this.productsFiltered.find((p: Product) => p.id === item.id);
       if (product) {
         product.cant = item.cant;
       }
@@ -75,7 +76,7 @@ export class ProductsPage implements OnInit {
   handleInput(event: Event) {
     const target = event.target as HTMLIonSearchbarElement;
     const query = target.value?.toLowerCase() || '';
-    this.productsFiltered = this.products.filter((p) => p.name.toLowerCase().includes(query));
+    this.productsFiltered = this.products.filter((p: Product) => p.name.toLowerCase().includes(query));
   }
 //AR-47
  modifyCant(product: Product, type: 'add' | 'remove') {
@@ -91,8 +92,8 @@ export class ProductsPage implements OnInit {
       }
     }
 
-    this.products.find((p) => p.id == product.id)?.cant == product.cant
-    this.productsFiltered.find((p) => p.id == product.id)?.cant == product.cant
+    this.products.find((p:Product) => p.id == product.id)?.cant == product.cant
+    this.productsFiltered.find((p:Product) => p.id == product.id)?.cant == product.cant
 
     console.log(this.productsFiltered)
     this.addCart()
@@ -101,7 +102,7 @@ export class ProductsPage implements OnInit {
  //AR-47
  addCart() {
   const cartProducts = [...this.products.filter(p => p.cant > 0)]
-  this.local.set(StorageKey.Cart, cartProducts).then(() => {
+  this.local.set<Product[]>(StorageKey.Cart, cartProducts).then(() => {
     this.setMessage("Productos agregados al carrito", 'success')
   })
  }

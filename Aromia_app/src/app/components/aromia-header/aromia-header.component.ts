@@ -8,7 +8,7 @@ import { StorageKey, StorageService } from 'src/app/services/storage.service';
 @Component({
   selector: 'aromia-header',
   standalone: true,
-  imports: [IonAvatar, IonIcon, IonMenuButton],
+  imports: [IonAvatar, IonIcon, IonMenuButton, IonButton, IonBadge],
   templateUrl: './aromia-header.component.html',
   styleUrls: ['./aromia-header.component.scss'],
 })
