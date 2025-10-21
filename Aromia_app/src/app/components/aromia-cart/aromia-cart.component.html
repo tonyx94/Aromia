@@ -1,0 +1,43 @@
+<div class="p-26">
+  <h4 class="bold">Productos a comprar</h4><br>
+  <ion-list>
+    @for (product of cart; track $index) {
+    <ion-item class="p-4 product" lines="none">
+      <ion-thumbnail slot="start">
+        <img [src]="product.image_url" alt="{{ product.name }}" />
+      </ion-thumbnail>
+      <div class="p-12">
+        <p class="m-0 bold body-md">{{ product.name }}</p>
+        <p class="m-0 color-medium body-sm description">{{ product.description }}</p>
+        <p class=" m-0 color-medium body-sm">{{ product.price | currency }} c/u</p>
+        <p class="m-0 bold color-primary body-m">{{ (product.price * product.cant) | currency }} total</p>
+      </div>
+      @if(product.cant > 0) {
+      <ion-badge color="primary">{{ product.cant }}</ion-badge>
+      }
+
+    </ion-item>
+    }
+
+  </ion-list><br><hr>
+
+  <div class="totals-card" role="region" aria-label="Totales de la orden">
+  <div class="totals-grid">
+    <div class="label">Subtotal</div>
+    <div class="value">{{ getSubtotal() | currency: '₡'}}</div>
+
+    <div class="label">Impuestos (13%)</div>
+    <div class="value">{{ getTaxes() | currency: '₡'}}</div>
+
+    <div class="label">Descuento</div>
+    <div class="value negative">{{ getDiscount() | currency: '₡'}}</div>
+
+    <div class="divider" aria-hidden="true"></div>
+    <div class="divider" aria-hidden="true"></div>
+
+    <div class="label total">Total</div>
+    <div class="value total">{{ getTotal() | currency: '₡'}}</div>
+  </div>
+</div>
+
+</div>
