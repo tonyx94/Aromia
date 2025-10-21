@@ -24,7 +24,6 @@
         object-fit: cover;
     }
 }
-//AR-47
 
 .product {
     position: relative;
@@ -32,6 +31,12 @@
     border-radius: 12px;
     overflow: visible !important;
     box-shadow: 4px 6px 20px -6px rgba(0, 0, 0, 0.2);
+    ion-thumbnail {
+        width: 70px;
+        height: 80px;
+        --border-radius: 8px;
+
+    }
     ion-badge {
         top: -4px;
         right: -4px;
@@ -50,4 +55,63 @@
     display: flex;
     align-items: center;
     flex-direction: row;
+}
+
+
+.totals-card{
+  background: var(--bg);
+  padding: var(--pad);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  max-width: 420px;
+  width: 100%;
+}
+
+.totals-grid{
+  display: grid;
+  grid-template-columns: 1fr auto; 
+  gap: var(--gap) 16px;
+  align-items: center;
+}
+
+.label{
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.value{
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: right;
+}
+
+.value.negative{
+  color: var(--danger);
+}
+
+.divider{
+  grid-column: 1 / -1;
+  height: 1px;
+  background: var(--surface);
+  margin: 8px 0;
+}
+
+.total{
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+@media (max-width: 360px){
+  .totals-grid{
+    grid-template-columns: 1fr;
+  }
+  .value{
+    text-align: left;
+  }
+  .label{
+    margin-top: 6px;
+  }
+  .divider{
+    margin: 10px 0;
+  }
 }
