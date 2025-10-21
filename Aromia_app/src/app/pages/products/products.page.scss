@@ -24,3 +24,29 @@
         object-fit: cover;
     }
 }
+
+.product {
+    position: relative;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    overflow: visible !important;
+    box-shadow: 4px 6px 20px -6px rgba(0, 0, 0, 0.2);
+    ion-badge {
+        top: -4px;
+        right: -4px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        border-radius: 50%;
+        position: absolute;
+        justify-content: center;
+    }
+}
+
+.range {
+    gap: 18px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}

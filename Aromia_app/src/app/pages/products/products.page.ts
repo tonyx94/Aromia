@@ -50,5 +50,44 @@ export class ProductsPage implements OnInit {
     const query = target.value?.toLowerCase() || '';
     this.productsFiltered = this.products.filter((p) => p.name.toLowerCase().includes(query));
   }
+//AR-47
+ modifyCant(product: Product, type: 'add' | 'remove') {
+    if(type == 'add') {
+      if(product.cant < product.stock_quantity) {
+         product.cant = product.cant + 1
+      }
+    }
 
+    if(type == 'remove') {
+      if(product.cant > 0) {
+        product.cant = product.cant - 1
+      }
+    }
+
+    this.products.find((p) => p.id == product.id)?.cant == product.cant
+    this.productsFiltered.find((p) => p.id == product.id)?.cant == product.cant
+
+    console.log(this.productsFiltered)
+    this.addCart()
+ }
+
+ //AR-47
+ addCart() {
+  const cartProducts = [...this.products.filter(p => p.cant > 0)]
+  this.local.set(StorageKey.Cart, cartProducts).then(() => {
+    this.setMessage("Productos agregados al carrito", 'success')
+  })
+ }
+
+//AR-47
+ async setMessage(message: string, color: 'success'|'danger'|'warning') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 1500,
+      position: 'top',
+      color: color
+    });
+
+    await toast.present();
+  }
 }

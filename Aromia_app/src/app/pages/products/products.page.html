@@ -20,6 +20,10 @@
         <p class="m-0 color-medium body-sm description">{{ product.description }}</p>
         <p class="m-0 bold color-primary body-m">{{ product.price | currency }}</p>
       </div>
+      <!-- AR-47 -->
+      @if(product.cant > 0) {
+        <ion-badge color="primary">{{ product.cant }}</ion-badge>
+      }
     </ion-item>
     }
 
