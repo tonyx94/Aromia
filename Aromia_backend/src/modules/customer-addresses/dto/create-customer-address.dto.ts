@@ -9,7 +9,8 @@ import {
 
 export class CreateCustomerAddressDto {
   @IsInt()
-  customerId: number;
+  @IsOptional()
+  customerId?: number;  
 
   @IsString()
   @IsNotEmpty()
