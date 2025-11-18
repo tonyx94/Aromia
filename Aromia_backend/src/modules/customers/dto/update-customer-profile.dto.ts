@@ -1,13 +1,13 @@
 import { IsOptional, IsString, IsDateString } from 'class-validator';
-
-export class UpdateCustomerDto {
-  @IsOptional()
-  @IsString()
-  first_name?: string;
+export class UpdateCustomerProfileDto {
 
   @IsOptional()
   @IsString()
-  last_name?: string;
+  first_name?: string;  
+
+  @IsOptional()
+  @IsString()
+  last_name?: string;  
 
   @IsOptional()
   @IsString()
@@ -15,5 +15,5 @@ export class UpdateCustomerDto {
 
   @IsOptional()
   @IsDateString()
-  date_of_birth?: string;
+  date_of_birth?: string; 
 }
