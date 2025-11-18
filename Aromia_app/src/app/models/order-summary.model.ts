@@ -1,0 +1,2 @@
+export interface OrderItemSummary { productId: number; productName: string; productImage: string; quantity: number; unitPrice: number; total: number; }
+export interface OrderSummary { items: OrderItemSummary[]; subtotal: number; shippingCost: number; taxes: number; total: number; }

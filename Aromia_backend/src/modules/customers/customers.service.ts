@@ -59,4 +59,5 @@ export class CustomersService {
     const customer = await this.findOne(id);
     return this.customerRepository.remove(customer);
   }
+
 }

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/home"></ion-back-button></ion-buttons>
+    <ion-title>Resumen de Pedido</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ng-container *ngIf="summary$ | async as summary; else loadingOrError">
+    <div *ngIf="summary.items.length > 0; else emptyCart">
+      <ion-list>
+        <ion-item *ngFor="let item of summary.items" lines="full">
+          <ion-thumbnail slot="start"><img [src]="item.productImage || 'assets/placeholder.png'"></ion-thumbnail>
+          <ion-label><h2>{{ item.productName }}</h2><p>Cantidad: {{ item.quantity }}</p></ion-label>
+          <ion-note slot="end" color="primary">{{ item.total | currency:'USD' }}</ion-note>
+        </ion-item>
+      </ion-list>
+      <ion-card>
+        <ion-card-content>
+          <div class="totals-grid">
+            <span>Subtotal</span> <span class="ion-text-end">{{ summary.subtotal | currency:'USD' }}</span>
+            <span>Envío</span> <span class="ion-text-end">{{ summary.shippingCost | currency:'USD' }}</span>
+            <span>Impuestos</span> <span class="ion-text-end">{{ summary.taxes | currency:'USD' }}</span>
+            <b>Total</b> <b class="ion-text-end">{{ summary.total | currency:'USD' }}</b>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      <ion-button expand="block" (click)="proceedToPayment()">Continuar al Pago</ion-button>
+    </div>
+    <ng-template #emptyCart>
+      <div class="ion-text-center">
+        <h3>Tu carrito está vacío</h3>
+        <ion-button fill="outline" routerLink="/tabs/home">Ver productos</ion-button>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #loadingOrError>
+    <div class="ion-text-center">
+      <p *ngIf="error; else loading">{{ error }}</p>
+      <ng-template #loading><ion-spinner></ion-spinner></ng-template>
+    </div>
+  </ng-template>
+</ion-content>

@@ -17,7 +17,7 @@ import { SystemSettingsModule } from './modules/system-setting/system-setting.mo
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-
+import { PaymentsModule } from './modules/payments/payments.module';
  
 @Module({
   imports: [
@@ -35,7 +35,21 @@ import { AuthModule } from './auth/auth.module';
       logging: false, 
       dateStrings: false,
     }),
-    RolesModule, AdminUsersModule, CustomersModule, CustomerAddressesModule, CustomerAddressesModule, ProductCategoriesModule, ProductsModule, OrdersModule, OrderItemsModule, OrderStatusesModule, OrderStatusHistoryModule, ShoppingCartModule, SystemSettingsModule, AuthModule],
+    RolesModule,
+    AdminUsersModule,
+    CustomersModule,
+    CustomerAddressesModule,
+    ProductCategoriesModule,
+    ProductsModule,
+    OrdersModule,
+    OrderItemsModule,
+    OrderStatusesModule,
+    OrderStatusHistoryModule,
+    ShoppingCartModule,
+    SystemSettingsModule,
+    AuthModule,
+    PaymentsModule, // 2. AÑADIR A LA LISTA
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

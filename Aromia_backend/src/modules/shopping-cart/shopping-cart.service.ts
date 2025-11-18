@@ -63,4 +63,12 @@ export class ShoppingCartService {
     const item = await this.findOne(id);
     await this.cartRepo.remove(item);
   }
+
+findAllByCustomerId(customerId: number): Promise<ShoppingCart[]> {
+  return this.cartRepo.find({
+    where: { customer: { id: customerId } },
+    relations: ['product'],
+  });
+}
+
 }

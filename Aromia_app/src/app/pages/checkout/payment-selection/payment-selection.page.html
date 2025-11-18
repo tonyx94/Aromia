@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"><ion-back-button defaultHref="/checkout/order-summary"></ion-back-button></ion-buttons>
+    <ion-title>Método de Pago</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ng-container *ngIf="paymentMethods$ | async as methods">
+    <form [formGroup]="paymentForm">
+      <ion-list>
+        <ion-radio-group formControlName="method">
+          <ion-list-header><ion-label>Selecciona una opción</ion-label></ion-list-header>
+          <ion-item *ngFor="let method of methods">
+            <ion-radio slot="start" [value]="method.id"></ion-radio>
+            <ion-label>
+              <h2>{{ method.name }}</h2>
+              <p>{{ method.description }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+    </form>
+  </ng-container>
+  <ion-button expand="block" (click)="proceedToConfirmation()" [disabled]="paymentForm.invalid">
+    Continuar a la Confirmación
+  </ion-button>
+</ion-content>
