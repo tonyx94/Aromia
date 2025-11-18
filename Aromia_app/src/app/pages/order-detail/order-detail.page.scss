@@ -1,0 +1,96 @@
+#container {
+  text-align: center;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#container strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+#container p {
+  font-size: 16px;
+  line-height: 22px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+#container a {
+  text-decoration: none;
+}
+
+ion-content {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-card {
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+}
+
+ion-card-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+ion-card-subtitle {
+  font-size: 14px;
+  color: #777777;
+}
+
+ion-card-content p {
+  font-size: 14px;
+  margin: 4px 0;
+}
+
+
+ion-list {
+  margin-top: 8px;
+}
+
+ion-list-header {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444444;
+}
+
+ion-item {
+  --background: #ffffff;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+}
+
+ion-item ion-label h2 {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+ion-item ion-label p {
+  font-size: 13px;
+  margin: 2px 0;
+  color: #666666;
+}
+
+ion-note[slot='end'] {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+.loading-center {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}

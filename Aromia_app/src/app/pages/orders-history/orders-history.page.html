@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mis pedidos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loading" class="ion-margin-bottom"></ion-spinner>
+
+  <ion-list *ngIf="orders.length">
+    <ion-item
+      *ngFor="let order of orders"
+      [routerLink]="['/orders', order.id]"
+    >
+      <ion-label>
+        <h2>Pedido #{{ order.orderNumber }}</h2>
+        <p>Fecha: {{ order.createdAt | date : 'short' }}</p>
+        <p>Estado: {{ order.status }}</p>
+        <p>Total: {{ order.totalAmount | currency : 'CRC' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-item *ngIf="!orders.length && !loading">
+    <ion-label>No tienes pedidos aún.</ion-label>
+  </ion-item>
+</ion-content>

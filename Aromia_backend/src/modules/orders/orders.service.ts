@@ -23,7 +23,9 @@ export class OrdersService {
 
   async findOne(id: number): Promise<Order> {
     const order = await this.orderRepository.findOne({ where: { id } });
-    if (!order) throw new NotFoundException(`Orden con ID ${id} no encontrada`);
+    if (!order) {
+      throw new NotFoundException(`Orden con ID ${id} no encontrada`);
+    }
     return order;
   }
 
@@ -36,5 +38,33 @@ export class OrdersService {
   async remove(id: number): Promise<void> {
     const order = await this.findOne(id);
     await this.orderRepository.remove(order);
+  }
+
+  async findAllByCustomer(customerId: number): Promise<Order[]> {
+    return this.orderRepository.find({
+      where: { customer_id: customerId }, 
+      order: { created_at: 'DESC' },     
+    });
+  }
+
+  async findOneByCustomer(
+    orderId: number,
+    customerId: number,
+  ): Promise<Order> {
+    const order = await this.orderRepository.findOne({
+      where: {
+        id: orderId,
+        customer_id: customerId,
+      },
+      relations: ['items'], 
+    });
+
+    if (!order) {
+      throw new NotFoundException(
+        `Orden con ID ${orderId} no encontrada para este cliente`,
+      );
+    }
+
+    return order;
   }
 }

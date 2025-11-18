@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalle del pedido</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-spinner *ngIf="loading"></ion-spinner>
+
+  <ng-container *ngIf="order && !loading">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Pedido #{{ order.orderNumber }}</ion-card-title>
+        <ion-card-subtitle>
+          {{ order.createdAt | date : 'fullDate' }} - Estado:
+          {{ order.status }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Total: {{ order.totalAmount | currency : 'CRC' }}</p>
+        <p *ngIf="order.shippingAddress">
+          Enviado a: {{ order.shippingAddress }}
+        </p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list *ngIf="order.items?.length">
+      <ion-list-header>
+        <ion-label>Productos</ion-label>
+      </ion-list-header>
+
+      <ion-item *ngFor="let item of order.items">
+        <ion-label>
+          <h2>{{ item.productName }}</h2>
+          <p>Cantidad: {{ item.quantity }}</p>
+          <p>Precio unitario: {{ item.unitPrice | currency : 'CRC' }}</p>
+        </ion-label>
+        <ion-note slot="end">
+          {{ item.totalPrice | currency : 'CRC' }}
+        </ion-note>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+</ion-content>
