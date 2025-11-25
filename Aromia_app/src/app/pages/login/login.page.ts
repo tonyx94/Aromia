@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonInputPasswordToggle } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-import { AromiaApi } from 'src/app/services/request';
-import { ENDPOINTS } from 'src/environments/endpoints';
+import { ENDPOINTS } from '../../../environments/endpoints';
+import { AromiaApi } from '../../services/request';
 
 @Component({
   selector: 'app-login',

@@ -5,7 +5,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
  
 @ApiTags('Products')   
-@Controller('products')   
+@Controller('products')      
 export class ProductsController { 
   constructor(private readonly productsService: ProductsService) {}
 
@@ -19,7 +19,7 @@ export class ProductsController {
   @Get()
   @ApiOperation({ summary: 'Listar todos los productos' })
   @ApiResponse({ status: 200, description: 'Lista de productos obtenida correctamente' })
-  findAll() {
+  findAll() { 
     return this.productsService.findAll();
   }
  

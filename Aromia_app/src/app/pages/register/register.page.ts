@@ -5,8 +5,9 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton,
 
 import { addIcons } from 'ionicons';
 import { logoFacebook, logoGoogle } from 'ionicons/icons';
-import { AromiaApi } from 'src/app/services/request';
-import { ENDPOINTS } from 'src/environments/endpoints';
+import { ENDPOINTS } from '../../../environments/endpoints';
+import { AromiaApi } from '../../services/request';
+
 
 
 @Component({
