@@ -36,7 +36,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/order-detail/order-detail.page').then((m) => m.OrderDetailPage),
   },
  
-  
   {
     path: 'checkout',
     children: [
@@ -48,6 +47,10 @@ export const routes: Routes = [
         path: 'payment-selection', 
         loadComponent: () => import('./pages/checkout/payment-selection/payment-selection.page').then((m) => m.PaymentSelectionPage),
       },
+       {
+        path: 'confirmation',
+        loadComponent: () => import('./pages/checkout/confirmation/confirmation.page').then(m => m.ConfirmationPage)
+      },
       {
         path: '',
         redirectTo: 'order-summary',
@@ -56,3 +59,4 @@ export const routes: Routes = [
     ]
   },
 ];
+// ¡Aquí borramos la ruta duplicada que estaba abajo!
