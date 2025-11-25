@@ -14,6 +14,10 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
   },
+  {
+    path: 'products',
+    loadComponent: () => import('./pages/products/products.page').then( m => m.ProductsPage)
+  },
   
   {
     path: 'profile', 
@@ -31,6 +35,7 @@ export const routes: Routes = [
     path: 'orders/:id', 
     loadComponent: () => import('./pages/order-detail/order-detail.page').then((m) => m.OrderDetailPage),
   },
+ 
   
   {
     path: 'checkout',
