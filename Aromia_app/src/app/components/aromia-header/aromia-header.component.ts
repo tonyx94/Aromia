@@ -4,20 +4,38 @@ import { addIcons } from 'ionicons';
 import { cartOutline, menu } from 'ionicons/icons';
 import { Product } from '../../models/products';
 import { StorageKey, StorageService } from 'src/app/services/storage.service';
+<<<<<<< HEAD
+=======
+
+>>>>>>> tony
 
 @Component({
   selector: 'aromia-header',
   standalone: true,
+<<<<<<< HEAD
   imports: [IonAvatar, IonIcon, IonMenuButton, IonButton, IonBadge],
+=======
+  imports: [IonBadge, IonAvatar, IonIcon, IonMenuButton, IonButton],
+>>>>>>> tony
   templateUrl: './aromia-header.component.html',
   styleUrls: ['./aromia-header.component.scss'],
 })
 export class AromiaHeaderComponent implements OnInit {
+<<<<<<< HEAD
 @Input() products: Product[] = []
   @Output() openCart = new EventEmitter<boolean>();
   constructor(private local: StorageService) { 
     addIcons({menu,cartOutline});
   }
+=======
+  @Input() products: Product[] = []
+  @Output() openCart = new EventEmitter<boolean>();
+
+  constructor(private local: StorageService) { 
+    addIcons({menu,cartOutline});
+  }
+ 
+>>>>>>> tony
 
   ngOnInit() {}
 
@@ -31,6 +49,10 @@ export class AromiaHeaderComponent implements OnInit {
   //AR-47
   openCartComponent(is: boolean) {
     this.openCart.emit(is)
+<<<<<<< HEAD
   }
 
+=======
+  }
+>>>>>>> tony
 }

@@ -48,8 +48,7 @@ ion-content {
     flex-direction: column;
 } 
 
-.form-container * > {
-    background: red;
-        flex: 1;
-        width: 100%;
-     }
+.form-container > * {
+  flex: 1;
+  width: 100%;
+}

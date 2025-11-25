@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <aromia-header></aromia-header>
+    <aromia-header [products]="products" (openCart)="setOpenCart($event)"></aromia-header>
   </ion-toolbar>
 
   <ion-toolbar>
@@ -9,9 +9,10 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list class="p-26">
     @for (product of productsFiltered; track $index) {
-    <ion-item (click)="setOpenProductDetail(true, product)" class="p-4" lines="none" [button]="true" detail="true">
+    <ion-item (click)="setOpenProductDetail(true, product)" class="p-4 product" lines="none" [button]="true"
+      detail="true">
       <ion-thumbnail slot="start">
         <img [src]="product.image_url" alt="{{ product.name }}" />
       </ion-thumbnail>
@@ -22,8 +23,9 @@
       </div>
       <!-- AR-47 -->
       @if(product.cant > 0) {
-        <ion-badge color="primary">{{ product.cant }}</ion-badge>
-      }
+      <ion-badge color="primary">{{ product.cant }}</ion-badge>
+      }
+
     </ion-item>
     }
 
@@ -53,11 +55,13 @@
 
       <div class="px-20 py-12">
         <div class="range">
-          <ion-button [disabled]="productSelected.cant == 0" color="primary" (click)="modifyCant(productSelected, 'remove')" shape="round">
+          <ion-button [disabled]="productSelected.cant == 0" color="primary"
+            (click)="modifyCant(productSelected, 'remove')" shape="round">
             <ion-icon slot="icon-only" name="remove-outline"></ion-icon>
           </ion-button>
-            {{ productSelected.cant }}
-          <ion-button [disabled]="productSelected.cant == productSelected.stock_quantity"  color="primary" (click)="modifyCant(productSelected, 'add')" shape="round">
+          {{ productSelected.cant }}
+          <ion-button [disabled]="productSelected.cant == productSelected.stock_quantity" color="primary"
+            (click)="modifyCant(productSelected, 'add')" shape="round">
             <ion-icon slot="icon-only" name="add-outline"></ion-icon>
           </ion-button>
         </div>
@@ -66,10 +70,11 @@
     </ion-content>
     @if(productSelected.cant > 0) {
     <ion-footer mode="ios">
-      <ion-button (click)="addCart()" mode="ios" expand="block">Ir al carrito ({{ productSelected.price * productSelected.cant  | currency: '₡' }})</ion-button>
+      <ion-button (click)="addCart()" mode="ios" expand="block">Ir al carrito ({{ productSelected.price *
+        productSelected.cant | currency: '₡' }})</ion-button>
     </ion-footer>
     }
-    
+
   </ng-template>
 </ion-modal>
 
@@ -79,18 +84,18 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="end">
-          <ion-button (click)="setOpenCart(false)" >Cerrar</ion-button>
+          <ion-button (click)="setOpenCart(false)">Cerrar</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="p-26">
       <aromia-cart></aromia-cart>
     </ion-content>
-   
+
     <ion-footer mode="ios">
       <ion-button mode="ios" expand="block">Pagar</ion-button>
     </ion-footer>
 
-    
+
   </ng-template>
 </ion-modal>

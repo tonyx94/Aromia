@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
-import { AromiaHeaderComponent } from 'src/app/components/aromia-header/aromia-header.component';
-import { AromiaApi } from 'src/app/services/request';
-import { ENDPOINTS } from 'src/environments/endpoints';
+import { AromiaHeaderComponent } from '../../components/aromia-header/aromia-header.component';
+import { AromiaApi } from '../../services/request';
+
 
 @Component({
   selector: 'app-home',

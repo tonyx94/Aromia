@@ -12,5 +12,5 @@ export interface Product {
   min_stock_level: number;
   stock_quantity: number;
   updated_at: string;
-  cant: number;
+  cant: number  //AR-47
 }
