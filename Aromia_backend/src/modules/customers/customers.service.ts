@@ -11,7 +11,7 @@ export class CustomersService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-  ) {}
+  ) { }
 
   async create(createCustomerDto: CreateCustomerDto) {
     const hashedPassword = await bcrypt.hash(createCustomerDto.password, 10);

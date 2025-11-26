@@ -4,9 +4,10 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '../../services/profile.service';
 import { Customer } from '../../models/customer';
+import { StorageKey, StorageService } from 'src/app/services/storage.service';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'aromia-profile',
   standalone: true,
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
   templateUrl: './profile.page.html',
@@ -17,17 +18,16 @@ export class ProfilePage implements OnInit {
 
   form = this.fb.group({
     email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
-    first_name: ['', Validators.required],
-    last_name: ['', Validators.required],
+    name: ['', Validators.required],
     phone: [''],
-    date_of_birth: [''], // por ahora como input type="date"
   });
 
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
-    private toastCtrl: ToastController
-  ) {}
+    private toastCtrl: ToastController,
+    private local: StorageService
+  ) { }
 
   ngOnInit() {
     this.loadProfile();
@@ -35,20 +35,16 @@ export class ProfilePage implements OnInit {
 
   loadProfile() {
     this.loading = true;
-    this.profileService.getProfile().subscribe({
-      next: (customer: Customer) => {
-        this.loading = false;
-        this.form.patchValue(customer);
-      },
-      error: async () => {
-        this.loading = false;
-        const toast = await this.toastCtrl.create({
-          message: 'Error al cargar tus datos.',
-          duration: 2000,
-          color: 'danger',
+    this.local.get<Customer>(StorageKey.User).then((u) => {
+      if (u) {
+        this.form.setValue({
+          email: u.email,
+          name: u.name,
+          phone: u.phone || ''
         });
-        await toast.present();
-      },
+      }
+    }).finally(() => {
+      this.loading = false;
     });
   }
 
@@ -58,8 +54,8 @@ export class ProfilePage implements OnInit {
     this.loading = true;
     // no enviamos email porque normalmente no se edita
     const { email, ...data } = this.form.getRawValue();
-    
 
-    
+
+
   }
 }

@@ -13,12 +13,7 @@
 
     <ion-item>
       <ion-label position="stacked">Nombre</ion-label>
-      <ion-input formControlName="first_name"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Apellidos</ion-label>
-      <ion-input formControlName="last_name"></ion-input>
+      <ion-input formControlName="name"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -26,17 +21,12 @@
       <ion-input formControlName="phone" type="tel"></ion-input>
     </ion-item>
 
-    <ion-item>
+    <!-- <ion-item>
       <ion-label position="stacked">Fecha de nacimiento</ion-label>
       <ion-input formControlName="date_of_birth" type="date"></ion-input>
-    </ion-item>
+    </ion-item> -->
 
-    <ion-button
-      expand="block"
-      type="submit"
-      [disabled]="form.invalid || loading"
-      class="ion-margin-top"
-    >
+    <ion-button expand="block" type="submit" [disabled]="form.invalid || loading" class="ion-margin-top">
       {{ loading ? 'Guardando...' : 'Guardar cambios' }}
     </ion-button>
   </form>

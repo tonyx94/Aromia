@@ -5,23 +5,24 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonIn
 import { Router } from '@angular/router';
 import { ENDPOINTS } from '../../../environments/endpoints';
 import { AromiaApi } from '../../services/request';
+import { StorageKey, StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule, IonInput, IonButton, IonContent, IonHeader,CommonModule, FormsModule, IonInputPasswordToggle]
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, IonInput, IonButton, IonContent, IonHeader, CommonModule, FormsModule, IonInputPasswordToggle]
 })
 export class LoginPage implements OnInit {
 
   form!: FormGroup;
-  constructor(private api: AromiaApi, private route: Router, private fb: FormBuilder) {
+  constructor(private local: StorageService, private api: AromiaApi, private route: Router, private fb: FormBuilder) {
     this.form = this.fb.group({
-        email: ['tony18x@gmail.com', Validators.email],
-        password: ['123123', [Validators.required, Validators.minLength(6)]],
-        userType: ['customer', Validators.required],
-      }); 
+      email: ['tony18x@gmail.com', Validators.email],
+      password: ['123123', [Validators.required, Validators.minLength(6)]],
+      userType: ['customer', Validators.required],
+    });
   }
 
   ngOnInit() {
@@ -32,12 +33,14 @@ export class LoginPage implements OnInit {
     this.api.post(ENDPOINTS.AUTH.LOGIN, this.form.value).subscribe({
       next: (response) => {
         console.log('Login successful', response);
-        // Guardar el token en el almacenamiento local o en un servicio de autenticación
-        localStorage.setItem('token', response.access_token);
-        // Redirigir al usuario a la página principal u otra página protegida
+
+
+        this.local.set(StorageKey.Token, response.access_token)
+        this.local.set(StorageKey.User, response.user)
+
         this.route.navigate(['/home']);
       },
-      error: (error) => { 
+      error: (error) => {
         console.error('Login failed', error);
         alert('Error de inicio de sesión: ' + (error.error?.message || 'Por favor, verifica tus credenciales.'));
       }

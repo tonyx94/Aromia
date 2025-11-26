@@ -1,9 +1,84 @@
-<ion-header >
+<ion-header>
     <aromia-header></aromia-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-    <ion-button (click)="goTo()" shape="round">Ver productos</ion-button>
+    <div class="banners">
+        <div class="carousel-container">
+            <div class="carousel-track" [style.transform]="'translateX(-' + (currentBannerIndex * 100) + '%)'">
+                @for (banner of banners; track $index) {
+                <div class="carousel-slide">
+
+
+                    <div class="text">
+                        <div class="logo">
+                            <img [src]="banner.logo" alt="">
+                        </div>
+
+                        <p class="title">{{ banner.title }}</p>
+                        <p class="subtitle">{{ banner.subtitle }}</p>
+                    </div>
+
+                    <img [src]="banner.img" [alt]="'Banner ' + ($index + 1)" />
+                </div>
+                }
+            </div>
+            <div class="carousel-indicators">
+                @for (banner of banners; track $index) {
+                <button class="indicator" [class.active]="currentBannerIndex === $index" (click)="goToBanner($index)"
+                    [attr.aria-label]="'Ir a banner ' + ($index + 1)">
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    <div class="status-container">
+        <h5 class="bold">Mis pedidos</h5>
+        <div class="status">
+            <ion-item detail button lines="none">
+                <ion-label>
+                    <h3 class="bold color-dark">Pedido #12954</h3>
+                    <p>Tu pedido esta en preparación</p>
+                </ion-label>
+
+            </ion-item>
+
+            <div class="progress-container">
+                <div class="progress">
+                    <div class="bar active"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div class="date">
+                    <ion-chip color="primary" [outline]="false">15 Dic 25</ion-chip>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="recommended-container">
+        <h5 class="bold">Productos recomendados</h5>
+        <div class="recommended-products">
+            @for (product of recommendedProducts; track product.id) {
+            <div class="product-card">
+                <div class="product-image">
+                    <img [src]="product.image_url" [alt]="product.name" />
+                </div>
+                <div class="product-info">
+                    <h6 class="product-name">{{ product.name }}</h6>
+                    <p class="product-price">₡{{ product.price }}</p>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+
+
 </ion-content>
- 
+<ion-footer>
+    <ion-button mode="ios" (click)="goTo()" expand="block">Ver productos</ion-button>
+</ion-footer>
