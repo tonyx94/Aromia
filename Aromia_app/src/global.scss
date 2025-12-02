@@ -147,3 +147,69 @@ $widths: 10, 20, 30, 40, 50, 60, 70, 80, 90, 100;
     width: #{$width'%'};
   }
 }
+
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+
+  .marker-pin {
+    width: 46px;
+    height: 48px;
+    position: relative;
+    background: linear-gradient(135deg, #f72d55, #fb697a);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 
+      0 4px 10px rgba(0, 0, 0, 0.25),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50% 50% 50% 0;
+      top: 0;
+      left: 0;
+      background: rgba(251, 70, 91, 0.459);
+      transform: rotate(45deg);
+      animation: pulse 1.8s infinite ease-out;
+      z-index: -1;
+    }
+
+    /* Punto interno */
+    &::after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+    }
+
+    &:hover {
+      transform: rotate(-45deg) scale(1.08);
+      box-shadow: 
+        0 6px 14px rgba(0, 0, 0, 0.35),
+        inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    }
+  }
+}
+
+/* Animación del pulso */
+@keyframes pulse {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(0, 0) scale(1.8);
+    opacity: 0;
+  }
+}

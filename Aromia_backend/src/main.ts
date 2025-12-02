@@ -13,13 +13,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true, 
-  //     forbidNonWhitelisted: true, 
-  //     transform: true, 
-  //   }),
-  // );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   app.enableCors();
 
@@ -27,7 +27,7 @@ async function bootstrap() {
     .setTitle('Mi API E-Commerce')
     .setDescription('Documentación de la API para el sistema de e-commerce')
     .setVersion('1.0')
-    .addBearerAuth() 
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document);

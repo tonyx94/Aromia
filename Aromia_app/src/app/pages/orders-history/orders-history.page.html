@@ -8,13 +8,10 @@
   <ion-spinner *ngIf="loading" class="ion-margin-bottom"></ion-spinner>
 
   <ion-list *ngIf="orders.length">
-    <ion-item
-      *ngFor="let order of orders"
-      [routerLink]="['/orders', order.id]"
-    >
+    <ion-item *ngFor="let order of orders" [routerLink]="['/orders', order.id]">
       <ion-label>
         <h2>Pedido #{{ order.orderNumber }}</h2>
-        <p>Fecha: {{ order.createdAt | date : 'short' }}</p>
+        <p>Fecha: {{ order.created_at | date : 'short' }}</p>
         <p>Estado: {{ order.status }}</p>
         <p>Total: {{ order.totalAmount | currency : 'CRC' }}</p>
       </ion-label>

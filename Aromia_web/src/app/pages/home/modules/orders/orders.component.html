@@ -1,0 +1,187 @@
+<div class="orders-container">
+
+    <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando órdenes...</p>
+    </div>
+
+    <div *ngIf="error && !loading" class="error-state">
+        <p>{{ error }}</p>
+        <button (click)="loadOrders()" class="retry-btn">Reintentar</button>
+    </div>
+
+    <div *ngIf="!loading && !error" class="orders-layout">
+        <div class="orders-list-panel">
+            <div class="panel-header">
+
+                <button *ngIf="searchTerm || statusFilter !== 'all' || dateStart || dateEnd" (click)="clearFilters()"
+                    class="clear-filters-btn">
+                    Limpiar filtros
+                </button>
+            </div>
+
+            <div class="filters">
+
+
+                <div class="filter-row">
+                    <div style="flex: 2" class="filter-group">
+                        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)"
+                            placeholder="Buscar por # de orden o cliente..." class="search-input" />
+                    </div>
+                    <div style="flex: 1" class="filter-group">
+
+                        <select [(ngModel)]="statusFilter" (ngModelChange)="onStatusFilterChange($event)"
+                            class="status-select">
+                            <option value="all">Todos</option>
+                            <option *ngFor="let status of availableStatuses" [value]="status">
+                                {{ status }}
+                            </option>
+                        </select>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="orders-list">
+                <div *ngFor="let order of filteredOrders$ | async" class="order-card"
+                    [class.selected]="selectedOrder?.id === order.id" (click)="selectOrder(order)">
+                    <div style="flex: 2;">
+                        <div class="order-card-header">
+                            <h3>{{ order.order_number }}</h3>
+                            <span class="status-badge" [style.background-color]="order.status.color">
+                                {{ order.status.name | titlecase}}
+                            </span>
+                        </div>
+                        <div class="order-card-body">
+                            <p class="order-date">
+                                <strong>Fecha solicitud:</strong> {{ formatDate(order.created_at) }}
+                            </p>
+                            <p class="order-customer">
+                                <strong>Cliente:</strong> {{ order.customer.firstName }} {{ order.customer.lastName }}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- <button class="view-details-btn">Ver detalles</button> -->
+
+                </div>
+
+                <div *ngIf="(filteredOrders$ | async)?.length === 0" class="empty-state">
+                    <p>No se encontraron órdenes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-details-panel">
+            <div *ngIf="!selectedOrder" class="no-selection">
+                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p>Selecciona una orden para ver los detalles</p>
+            </div>
+
+            <div *ngIf="selectedOrder" class="order-details">
+
+                <div class="details-header">
+                    <div>
+                        <h2>{{ selectedOrder.order_number }}</h2>
+                        <p class="order-date-header">{{ formatDate(selectedOrder.created_at) }}</p>
+                    </div>
+                    <span class="status-badge-large" [style.background-color]="selectedOrder.status.color">
+                        {{ selectedOrder.status.name | titlecase }}
+                    </span>
+                </div>
+
+                <div class="details-section">
+                    <h3>{{ selectedOrder.customer.firstName }} {{ selectedOrder.customer.lastName }}</h3>
+                    <div class="customer-info">
+                        <p><strong>Email:</strong> {{ selectedOrder.customer.email }}</p>
+                        <p><strong>Teléfono:</strong> {{ selectedOrder.customer.phone }}</p>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h3>Productos</h3>
+                    <div class="products-list">
+                        <div *ngFor="let item of selectedOrder.items" class="product-item">
+                            <div class="product-info">
+                                <p class="product-name">{{ item.product.name }}</p>
+                                <p class="product-quantity">Cantidad: {{ item.quantity }}</p>
+                            </div>
+                            <p class="product-price">{{ formatCurrency(item.total_price) }}</p>
+                        </div>
+                    </div>
+
+                    <div class="order-totals">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span>{{ formatCurrency(selectedOrder.subtotal) }}</span>
+                        </div>
+                        <div class="total-row" *ngIf="selectedOrder.tax_amount > 0">
+                            <span>Impuestos:</span>
+                            <span>{{ formatCurrency(selectedOrder.tax_amount) }}</span>
+                        </div>
+                        <div class="total-row" *ngIf="selectedOrder.shipping_cost > 0">
+                            <span>Envío:</span>
+                            <span>{{ formatCurrency(selectedOrder.shipping_cost) }}</span>
+                        </div>
+                        <div class="total-row" *ngIf="selectedOrder.discount_amount > 0">
+                            <span>Descuento:</span>
+                            <span class="discount">-{{ formatCurrency(selectedOrder.discount_amount) }}</span>
+                        </div>
+                        <div class="total-row total-final">
+                            <span><strong>Total:</strong></span>
+                            <span><strong>{{ formatCurrency(selectedOrder.total_amount) }}</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h3>Dirección</h3>
+                    <div class="address-info">
+                        <p><strong>{{ selectedOrder.address.alias }}</strong></p>
+                        <p>{{ selectedOrder.address.streetAddress }}</p>
+                        <p>{{ selectedOrder.address.city }}, {{ selectedOrder.address.state }}</p>
+                        <p *ngIf="selectedOrder.address.postalCode">{{ selectedOrder.address.postalCode }}</p>
+                        <p>{{ selectedOrder.address.country }}</p>
+                        <p *ngIf="selectedOrder.address.additionalInfo" class="additional-info">
+                            {{ selectedOrder.address.additionalInfo }}
+                        </p>
+                    </div>
+
+                    <div class="map-container">
+                        <div class="map-placeholder">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <p>Mapa de ubicación</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <h3>Estado del pedido</h3>
+                    <div class="status-chips-container">
+                        <button *ngFor="let status of allStatuses" class="status-chip"
+                            [class.active]="selectedOrder.status_id === status.id" [style.--status-color]="status.color"
+                            (click)="changeOrderStatus(status.id)" [disabled]="selectedOrder.status_id === status.id">
+                            <span class="status-chip-indicator" [style.background-color]="status.color"></span>
+                            <span class="status-chip-name">{{ status.name | titlecase}}</span>
+                        </button>
+                    </div>
+                    <p class="status-description" *ngIf="selectedOrder.status.description">
+                        {{ selectedOrder.status.description }}
+                    </p>
+                </div>
+
+                <div class="details-section" *ngIf="selectedOrder.notes">
+                    <h3>Notas</h3>
+                    <p class="notes">{{ selectedOrder.notes }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

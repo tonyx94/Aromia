@@ -42,7 +42,6 @@ export class Customer {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  // Relaciones
   @OneToMany(() => CustomerAddress, (address) => address.customer)
   addresses: CustomerAddress[];
 

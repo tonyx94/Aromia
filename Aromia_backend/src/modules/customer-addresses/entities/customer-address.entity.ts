@@ -7,25 +7,25 @@ export class CustomerAddress {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 50 })
+  @Column({ length: 100, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   alias: string;
 
-  @Column({ name: 'street_address', length: 200 })
+  @Column({ name: 'street_address', length: 200, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   streetAddress: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   city: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   state: string;
 
-  @Column({ name: 'postal_code', length: 20, nullable: true })
+  @Column({ name: 'postal_code', length: 20, nullable: true, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   postalCode?: string;
 
-  @Column({ length: 100, default: 'Costa Rica' })
+  @Column({ length: 100, default: 'Costa Rica', charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   country: string;
 
-  @Column({ name: 'additional_info', type: 'text', nullable: true })
+  @Column({ name: 'additional_info', type: 'text', nullable: true, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   additionalInfo?: string;
 
   @Column({ name: 'is_default', default: false })
@@ -38,7 +38,6 @@ export class CustomerAddress {
   @JoinColumn({ name: 'customer_id' })
   customer: Customer;
 
-  // <-- relación inversa con orders
   @OneToMany(() => Order, (order) => order.address)
   orders: Order[];
 

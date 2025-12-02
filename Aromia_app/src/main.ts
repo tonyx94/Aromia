@@ -9,7 +9,10 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({
+      mode: 'ios',
+      innerHTMLTemplatesEnabled: true
+    }),
     provideHttpClient(withInterceptors([])),
     provideRouter(routes, withPreloading(PreloadAllModules)),
   ],

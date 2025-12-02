@@ -44,7 +44,7 @@ export class AddressesPage implements OnInit {
     private addressService: AddressService,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadAddresses();
@@ -87,13 +87,13 @@ export class AddressesPage implements OnInit {
     this.form.setValue({
       id: addr.id ?? null,
       alias: addr.alias,
-      street_address: addr.street_address,
+      street_address: addr.streetAddress,
       city: addr.city,
       state: addr.state,
-      postal_code: addr.postal_code ?? '',
+      postal_code: addr.postalCode ?? '',
       country: addr.country ?? '',
-      additional_info: addr.additional_info ?? '',
-      is_default: !!addr.is_default,
+      additional_info: addr.additionalInfo ?? '',
+      is_default: !!addr.isDefault,
     });
   }
 
@@ -150,13 +150,13 @@ export class AddressesPage implements OnInit {
 
     const payload: Address = {
       alias: value.alias!,
-      street_address: value.street_address!,
+      streetAddress: value.street_address!,
       city: value.city!,
       state: value.state!,
-      postal_code: value.postal_code || undefined,
+      postalCode: value.postal_code || undefined,
       country: value.country || undefined,
-      additional_info: value.additional_info || undefined,
-      is_default: value.is_default || false,
+      additionalInfo: value.additional_info || undefined,
+      isDefault: value.is_default || false,
     };
 
     if (id) {

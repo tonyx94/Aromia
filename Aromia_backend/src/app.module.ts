@@ -18,7 +18,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PaymentsModule } from './modules/payments/payments.module';
- 
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -26,14 +26,15 @@ import { PaymentsModule } from './modules/payments/payments.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: "127.0.0.1",
-      port: 3306,
+      port: 3310,
       username: "root",
       password: "",
       database: "aromia",
-      entities: [__dirname + '/**/entities/*.entity{.ts,.js}'], 
-      synchronize: true, 
-      logging: false, 
+      entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
+      synchronize: true,
+      logging: false,
       dateStrings: false,
+      charset: 'utf8mb4_unicode_ci',
     }),
     RolesModule,
     AdminUsersModule,
@@ -48,9 +49,9 @@ import { PaymentsModule } from './modules/payments/payments.module';
     ShoppingCartModule,
     SystemSettingsModule,
     AuthModule,
-    PaymentsModule, // 2. AÑADIR A LA LISTA
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

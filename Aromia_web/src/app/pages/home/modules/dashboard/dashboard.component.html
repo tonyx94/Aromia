@@ -1,34 +1,48 @@
-<div class="flex flex-row gap-4 p-26">
+<div class="flex flex-col gap-6 p-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 rounded-xl shadow-sm">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-100 m-0">Dashboard</h1>
+            <p class="text-gray-400 m-0">Resumen estadístico de tu negocio</p>
+        </div>
 
-    <p-floatlabel variant="on">
-        <p-datepicker size="small" dateFormat="dd MM yy" [(ngModel)]="rangeDates" selectionMode="range"
-            [readonlyInput]="true" inputId="over_label" showIcon iconDisplay="input" />
-        <label for="over_label">Rango de fecha</label>
-    </p-floatlabel>
-    <p-button size="small" (onClick)="getData()" icon="pi pi-search" [rounded]="true" [outlined]="true" />
-</div>
- 
-<div class="p-26 container-grid">
-
-    <aromia-resume></aromia-resume>
-
-    <p-card> 
-        <aromia-earnings-cotizacion [rangeDates]="datesSelected"></aromia-earnings-cotizacion>
-    </p-card>
-    <p-card>
-        <aromia-earnings-seller [rangeDates]="datesSelected"></aromia-earnings-seller>
-    </p-card> 
-
-    <div class="flex flex-wrap gap-4">
-        <p-card class="flex-1 relative"> 
-            <aromia-clients-stats></aromia-clients-stats>
-        </p-card>
-        <p-card class="flex-1 relative">
-            <aromia-facturados-stats></aromia-facturados-stats>
-        </p-card>
-        <!-- <p-card class="flex-1 relative">
-            <aromia-facturados-stats></aromia-facturados-stats>
-        </p-card> -->
+        <div class="flex flex-row gap-2 items-center">
+            <p-floatlabel variant="on">
+                <p-datepicker size="small" dateFormat="dd MM yy" [(ngModel)]="rangeDates" selectionMode="range"
+                    [readonlyInput]="true" inputId="over_label" showIcon iconDisplay="input" />
+                <label for="over_label">Rango de fecha</label>
+            </p-floatlabel>
+            <p-button size="small" (onClick)="getData()" icon="pi pi-search" [rounded]="true" [outlined]="true" />
+        </div>
     </div>
 
+    <app-revenue-metrics [data]="revenueMetrics" [loading]="loadingMetrics"></app-revenue-metrics>
+
+    <!-- Main Charts Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Sales Over Time (Full Width on Mobile, 2/3 on Desktop) -->
+        <div class="lg:col-span-2">
+            <app-sales-over-time-chart [data]="salesOverTime" [loading]="loadingSales"></app-sales-over-time-chart>
+        </div>
+
+        <!-- Orders Status (1/3 on Desktop) -->
+        <div class="lg:col-span-1">
+            <app-orders-status-chart [data]="ordersByStatus" [loading]="loadingOrders"></app-orders-status-chart>
+        </div>
+
+        <!-- Monthly Revenue (Full Width on Mobile, 2/3 on Desktop) -->
+        <div class="lg:col-span-2">
+            <app-monthly-revenue-chart [data]="monthlyComparison"
+                [loading]="loadingMonthly"></app-monthly-revenue-chart>
+        </div>
+
+        <!-- Customer Growth (1/3 on Desktop) -->
+        <div class="lg:col-span-1">
+            <app-customer-growth-chart [data]="customerGrowth" [loading]="loadingCustomers"></app-customer-growth-chart>
+        </div>
+    </div>
+
+    <!-- Top Products (Full Width) -->
+    <div class="w-full">
+        <app-top-products-chart [data]="topProducts" [loading]="loadingProducts"></app-top-products-chart>
+    </div>
 </div>

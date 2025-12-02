@@ -1,10 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonLabel, IonChip, IonFooter } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonLabel, IonChip, IonFooter, IonModal, IonButtons } from '@ionic/angular/standalone';
 import { AromiaHeaderComponent } from '../../components/aromia-header/aromia-header.component';
 import { AromiaApi } from '../../services/request';
 import { ENDPOINTS } from 'src/environments/endpoints';
 import { Product } from 'src/app/models/products';
+import { StorageKey, StorageService } from 'src/app/services/storage.service';
+import { AromiaCartComponent } from 'src/app/components/aromia-cart/aromia-cart.component';
+import { OrdersService } from 'src/app/services/orders.service';
+import { Order } from 'src/app/models/order';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -12,7 +17,7 @@ import { Product } from 'src/app/models/products';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonFooter, IonChip, IonLabel, IonItem, IonButton, IonHeader, IonContent, AromiaHeaderComponent],
+  imports: [IonFooter, IonChip, IonLabel, IonItem, IonButton, IonHeader, IonContent, AromiaHeaderComponent, IonModal, IonButtons, AromiaCartComponent, IonToolbar, DatePipe],
 })
 export class HomePage implements OnInit, OnDestroy {
   products: Product[] = [];
@@ -26,16 +31,80 @@ export class HomePage implements OnInit, OnDestroy {
   ];
   currentBannerIndex: number = 0;
   private intervalId: any;
+  isCartOpen: any;
 
-  constructor(private api: AromiaApi, private route: Router) { }
+  orders: Order[] = [];
+
+  constructor(
+    private api: AromiaApi,
+    private route: Router,
+    private local: StorageService,
+    private ordersService: OrdersService
+  ) { }
 
   ngOnInit() {
-    this.getProducts();
     this.startCarousel();
+  }
+
+  ionViewDidEnter() {
+    this.getProducts();
+    this.getOrders();
   }
 
   ngOnDestroy() {
     this.stopCarousel();
+  }
+
+  async getOrders() {
+    const user = await this.local.get<any>(StorageKey.User);
+    const customerId = user?.id;
+
+    this.ordersService.getMyOrders(customerId).subscribe({
+      next: (orders) => {
+        this.orders = orders;
+        console.log('Orders fetched:', orders);
+      },
+      error: (e) => {
+        console.error('Error fetching orders', e);
+      }
+    });
+  }
+
+  getProducts() {
+    this.api.get(ENDPOINTS.PRODUCTS.GET_ALL).subscribe({
+      next: (products) => {
+        products.forEach((product: Product) => product.cant = 0);
+
+        this.products = products;
+        this.setRecommendedProducts();
+
+        this.local.get<Product[]>(StorageKey.Cart).then((c) => {
+          if (c) {
+            this.setCartInProducts(c)
+          }
+        })
+      },
+      error: (e) => {
+        console.log(e)
+      }
+    })
+  }
+
+  setCartInProducts(c: Product[]) {
+    c.forEach(item => {
+      const product = this.products.find((p: Product) => p.id === item.id);
+      const productFiltered = this.products.find((p: Product) => p.id === item.id);
+      if (product) {
+        product.cant = item.cant;
+      }
+      if (productFiltered) {
+        productFiltered.cant = item.cant;
+      }
+    });
+  }
+
+  setOpenCart(isOpen: any) {
+    this.isCartOpen = isOpen;
   }
 
   startCarousel() {
@@ -60,18 +129,6 @@ export class HomePage implements OnInit, OnDestroy {
     this.startCarousel();
   }
 
-  getProducts() {
-    this.api.get(ENDPOINTS.PRODUCTS.GET_ALL).subscribe({
-      next: (products) => {
-        this.products = products;
-        this.setRecommendedProducts();
-      },
-      error: (e) => {
-        console.log(e)
-      }
-    })
-  }
-
   setRecommendedProducts() {
     const shuffled = [...this.products];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -83,5 +140,20 @@ export class HomePage implements OnInit, OnDestroy {
 
   goTo() {
     this.route.navigate(['/products']);
+  }
+
+  getOrderProgress(status: string): number {
+    if (status == null) {
+      status = "pending"
+    }
+    const statusLower = status.toLowerCase();
+    if (['pending', 'confirmed'].includes(statusLower)) {
+      return 1;
+    } else if (['processing', 'preparing'].includes(statusLower)) {
+      return 2;
+    } else if (['shipped', 'delivered'].includes(statusLower)) {
+      return 3;
+    }
+    return 1; // Default to 1
   }
 }

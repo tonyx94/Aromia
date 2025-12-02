@@ -60,4 +60,28 @@ export class CustomersService {
     return this.customerRepository.remove(customer);
   }
 
+  // ===== DASHBOARD STATISTICS METHODS =====
+
+  async getCustomerGrowth(startDate: string, endDate: string): Promise<any> {
+    const customers = await this.customerRepository
+      .createQueryBuilder('customer')
+      .select('DATE(customer.created_at)', 'date')
+      .addSelect('COUNT(customer.id)', 'newCustomers')
+      .where('customer.created_at BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .groupBy('DATE(customer.created_at)')
+      .orderBy('date', 'ASC')
+      .getRawMany();
+
+    let totalCustomers = 0;
+    const data = customers.map(item => {
+      totalCustomers += parseInt(item.newCustomers);
+      return {
+        date: item.date,
+        newCustomers: parseInt(item.newCustomers) || 0,
+        totalCustomers,
+      };
+    });
+
+    return { data };
+  }
 }

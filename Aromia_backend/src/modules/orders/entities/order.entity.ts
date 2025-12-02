@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { CustomerAddress } from '../../customer-addresses/entities/customer-address.entity';
 import { Customer } from '../../customers/entities/customer.entity';
@@ -47,10 +48,10 @@ export class Order {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   total_amount: number;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   notes: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text', nullable: true, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   admin_notes: string;
 
   @Column({ type: 'datetime', nullable: true })
@@ -65,19 +66,22 @@ export class Order {
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 
-  // Relaciones
-  @ManyToOne(() => Customer, (customer) => customer.orders, { eager: true })
-  customer: Customer;
-
-  @ManyToOne(() => CustomerAddress, (address) => address.orders, { eager: true })
-  address: CustomerAddress;
-
-  @ManyToOne(() => OrderStatus, (status) => status.orders, { eager: true })
-  status: OrderStatus;
-
   @OneToMany(() => OrderItem, (item) => item.order, { cascade: true })
   items: OrderItem[];
 
   @OneToMany(() => OrderStatusHistory, (history) => history.changed_by, { cascade: true })
   statusHistory: OrderStatusHistory[];
+
+
+  @ManyToOne(() => Customer, (customer) => customer.orders, { eager: true })
+  @JoinColumn({ name: 'customer_id' })
+  customer: Customer;
+
+  @ManyToOne(() => CustomerAddress, (address) => address.orders, { eager: true })
+  @JoinColumn({ name: 'address_id' })
+  address: CustomerAddress;
+
+  @ManyToOne(() => OrderStatus, (status) => status.orders, { eager: true })
+  @JoinColumn({ name: 'status_id' })
+  status: OrderStatus;
 }

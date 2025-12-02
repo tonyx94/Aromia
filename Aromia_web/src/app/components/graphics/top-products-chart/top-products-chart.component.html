@@ -1,0 +1,18 @@
+<div class="card h-full">
+    <div class="flex justify-between items-center mb-4">
+        <h5 class="m-0 font-semibold text-lg">Top Productos Vendidos</h5>
+    </div>
+
+    <div class="relative h-[300px]" *ngIf="!loading && chartData">
+        <p-chart type="bar" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+    </div>
+
+    <div *ngIf="loading" class="h-[300px] flex items-center justify-center">
+        <p-skeleton width="100%" height="300px"></p-skeleton>
+    </div>
+
+    <div *ngIf="!loading && (!chartData || chartData.datasets[0].data.length === 0)"
+        class="h-[300px] flex items-center justify-center text-500">
+        No hay datos disponibles
+    </div>
+</div>

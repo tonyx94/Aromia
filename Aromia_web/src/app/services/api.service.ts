@@ -25,4 +25,8 @@ export class ApiAromia {
   delete<T>(endpoint: any, options?: any): Observable<any> {
     return this.http.delete<T>(`${this.url}/${endpoint}`, options);
   }
+
+  patch<T>(endpoint: any, body: any, options?: any): Observable<any> {
+    return this.http.patch<T>(`${this.url}/${endpoint}`, body, options);
+  }
 }

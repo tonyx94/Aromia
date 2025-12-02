@@ -16,7 +16,7 @@ export class ShoppingCartService {
     private readonly customerRepo: Repository<Customer>,
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
-  ) {}
+  ) { }
 
   async create(dto: CreateShoppingCartDto): Promise<ShoppingCart> {
     const customer = await this.customerRepo.findOne({ where: { id: dto.customerId } });
@@ -64,11 +64,14 @@ export class ShoppingCartService {
     await this.cartRepo.remove(item);
   }
 
-findAllByCustomerId(customerId: number): Promise<ShoppingCart[]> {
-  return this.cartRepo.find({
-    where: { customer: { id: customerId } },
-    relations: ['product'],
-  });
-}
+  findAllByCustomerId(customerId: number): Promise<ShoppingCart[]> {
+    return this.cartRepo.find({
+      where: { customer: { id: customerId } },
+      relations: ['product'],
+    });
+  }
 
+  async clearByCustomerId(customerId: number): Promise<void> {
+    await this.cartRepo.delete({ customer: { id: customerId } });
+  }
 }

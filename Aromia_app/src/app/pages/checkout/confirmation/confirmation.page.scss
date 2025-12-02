@@ -1,0 +1,168 @@
+.search-container {
+  position: relative;
+  z-index: 1000;
+  background: var(--ion-background-color);
+  
+  ion-searchbar {
+    --background: var(--ion-color-light);
+    --border-radius: 8px;
+    padding: 8px;
+  }
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: var(--ion-background-color); 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  margin: 0 8px;
+  border-radius: 8px;
+  
+  ion-item {
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+    
+    h3 {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 4px 0;
+    }
+  }
+}
+
+.map-wrapper {
+  position: relative;
+  height: 400px;
+  width: 100%;
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: block;
+  
+  // Ensure Leaflet controls are visible
+  .leaflet-control-container {
+    z-index: 999;
+  }
+  
+  // Force Leaflet to use full container size
+  .leaflet-container {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+.location-fab {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 999;
+  
+  ion-fab-button {
+    color: #ffffff;
+    --color: #ffffff;
+    --background: var(--ion-color-primary);
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.address-card {
+  margin: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  ion-card-header {
+    padding-bottom: 8px;
+  }
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ion-color-primary);
+  }
+  
+  ion-card-content {
+    padding-top: 0;
+    
+    ion-item {
+      --padding-start: 0;
+      --inner-padding-end: 0;
+    }
+    
+    ion-icon {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    
+    p {
+      margin: 4px 0;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    
+    .coordinates {
+      font-size: 12px;
+      color: var(--ion-color-medium);
+      margin-top: 8px;
+    }
+  }
+}
+
+.button-container {
+  padding: 16px;
+  
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 600;
+    text-transform: none;
+    height: 48px;
+  }
+}
+
+
+// Custom marker styles
+.custom-marker {
+  background: transparent;
+  border: none;
+  
+  .marker-pin {
+    width: 30px;
+    height: 42px;
+    position: relative;
+    background: var(--ion-color-success, #2dd36f);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    
+    &::after {
+      content: '';
+      width: 14px;
+      height: 14px;
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (min-width: 768px) {
+  .map-wrapper {
+    height: 500px;
+  }
+}
+

@@ -38,6 +38,14 @@ export class ProductsPage implements OnInit {
 
   //AR-48
   ngOnInit() {
+
+  }
+
+  ionViewDidEnter() {
+    this.getProducts();
+  }
+
+  getProducts() {
     this.api.get<Product[]>(ENDPOINTS.PRODUCTS.GET_ALL).subscribe((products) => {
       products.forEach((product: Product) => product.cant = 0);
       console.log('Productos obtenidos:', products);

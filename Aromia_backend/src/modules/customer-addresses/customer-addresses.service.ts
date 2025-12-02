@@ -13,7 +13,7 @@ export class CustomerAddressesService {
     private readonly customerAddressRepository: Repository<CustomerAddress>,
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-  ) {}
+  ) { }
 
   async create(createCustomerAddressDto: CreateCustomerAddressDto) {
     const customer = await this.customerRepository.findOne({

@@ -89,12 +89,10 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="p-26">
-      <aromia-cart></aromia-cart>
+      <aromia-cart (ready)="setOpenCart(!$event)"></aromia-cart>
     </ion-content>
 
-    <ion-footer mode="ios">
-      <ion-button mode="ios" expand="block">Pagar</ion-button>
-    </ion-footer>
+
 
 
   </ng-template>

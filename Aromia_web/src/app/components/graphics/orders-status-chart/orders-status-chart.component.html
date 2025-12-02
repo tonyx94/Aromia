@@ -1,0 +1,23 @@
+<div class="card h-full">
+    <div class="flex justify-between items-center mb-4">
+        <h5 class="m-0 font-semibold text-lg">Órdenes por Estado</h5>
+        <span class="text-sm text-500 font-medium" *ngIf="data?.total">Total: {{ data.total }}</span>
+    </div>
+
+    <div class="relative h-[300px] flex justify-center" *ngIf="!loading && chartData">
+        <p-chart type="doughnut" [data]="chartData" [options]="chartOptions" height="250px" width="100%"></p-chart>
+        <div class="absolute flex flex-row gap-2 items-center justify-center pointer-events-none">
+            <span class="text-xl font-bold text-900">{{ data.total }}</span>
+            <span class="text-sm text-500">Órdenes</span>
+        </div>
+    </div>
+
+    <div *ngIf="loading" class="h-[300px] flex items-center justify-center">
+        <p-skeleton shape="circle" size="200px"></p-skeleton>
+    </div>
+
+    <div *ngIf="!loading && (!chartData || chartData.datasets[0].data.length === 0)"
+        class="h-[300px] flex items-center justify-center text-500">
+        No hay datos disponibles
+    </div>
+</div>

@@ -10,6 +10,13 @@ export const ENDPOINTS = {
     UPDATE: (id: string) => `customers/${id}`,
     DELETE: (id: string) => `customers/${id}`,
   },
+  CLIENTS: {
+    GET_ALL: 'customers',
+    GET_BY_ID: (id: string) => `customers/${id}`,
+    CREATE: 'customers',
+    UPDATE: (id: string) => `customers/${id}`,
+    DELETE: (id: string) => `customers/${id}`,
+  },
   ADMINS: {
     GET_ALL: 'admin-users',
     GET_BY_ID: (id: string) => `admin-users/${id}`,
@@ -24,5 +31,5 @@ export const ENDPOINTS = {
     UPDATE: (id: string) => `products/${id}`,
     DELETE: (id: string) => `products/${id}`,
   }
-   
+
 };

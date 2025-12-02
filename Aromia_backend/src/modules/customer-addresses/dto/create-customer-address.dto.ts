@@ -10,7 +10,7 @@ import {
 export class CreateCustomerAddressDto {
   @IsInt()
   @IsOptional()
-  customerId?: number;  
+  customerId?: number;
 
   @IsString()
   @IsNotEmpty()
@@ -19,7 +19,6 @@ export class CreateCustomerAddressDto {
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(200)
   streetAddress: string;
 
   @IsString()

@@ -39,7 +39,12 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/home/modules/dashboard/dashboard.component').then(m => m.DashboardComponent),
         title: 'Aromia - Dashboard'
       },
-   
+      {
+        path: 'pedidos',
+        loadComponent: () => import('./pages/home/modules/orders/orders.component').then(m => m.OrdersComponent),
+        title: 'Aromia - Pedidos'
+      },
+
       {
         path: 'maintenance',
         loadComponent: () => import('./pages/home/modules/maintenance/maintenance.component').then(m => m.MaintenanceComponent),
@@ -51,16 +56,21 @@ export const routes: Routes = [
         title: 'Aromia - Usuarios'
       },
       {
+        path: 'clients',
+        loadComponent: () => import('./pages/home/modules/clients/clients.component').then(m => m.ClientsComponent),
+        title: 'Aromia - Clientes'
+      },
+      {
         path: 'products',
         loadComponent: () => import('./pages/home/modules/products/products.component').then(m => m.ProductsComponent),
         title: 'Aromia - Productos'
       },
-       {
+      {
         path: 'home',
         loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
         title: 'Aromia - Inicio'
       },
-  
+
     ]
   },
   {

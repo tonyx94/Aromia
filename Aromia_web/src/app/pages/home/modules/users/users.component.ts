@@ -154,7 +154,7 @@ export class UsersComponent implements OnInit {
       //     console.log(e);
       //   },
       // });
-    } 
+    }
 
     if (type == 'update') {
       console.log(this.formUpdate.value)
@@ -178,10 +178,10 @@ export class UsersComponent implements OnInit {
       //   },
       // });
     }
-  } 
+  }
 
   getUsers() {
-    this.api.get(ENDPOINTS.ADMINS.GET_ALL).subscribe({
+    this.api.get(ENDPOINTS.CLIENTS.GET_ALL).subscribe({
       next: (response: any) => {
         this.users = response;
         this.usersFiltered = [...this.users]
@@ -262,7 +262,7 @@ export class UsersComponent implements OnInit {
 
     const hue = Math.abs(hash) % 360;
     const saturation = 90;
-    const lightness = 60; 
+    const lightness = 60;
 
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
@@ -296,14 +296,14 @@ export class UsersComponent implements OnInit {
 
   filterUser(ev: any) {
     console.log(ev)
-    if(this.search_user_text == '') {
+    if (this.search_user_text == '') {
       this.usersFiltered = [...this.users]
       return
     }
 
-    this.usersFiltered = this.users.filter((u) => 
-      u.name == this.search_user_text || 
-      u.lastname == this.search_user_text || 
+    this.usersFiltered = this.users.filter((u) =>
+      u.name == this.search_user_text ||
+      u.lastname == this.search_user_text ||
       u.emailCompany == this.search_user_text
     )
   }
@@ -311,14 +311,14 @@ export class UsersComponent implements OnInit {
 
   async resetUserPassword() {
     this.resetting = true;
-    
+
     // try {
     //   const response = await this.api.users.resetUserPassword(this.userSelected.user_id).toPromise();
-      
+
     //   if (response.success) {
     //     this.tempPassword = response.data.tempPassword;
     //     this.tempPasswordGenerated = true;
-      
+
     //     alert('Contraseña temporal generada exitosamente');
     //   } else {
     //     alert('Error: ' + response.message);

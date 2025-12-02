@@ -1,11 +1,11 @@
 export interface Address {
   id?: number;
-  alias: string;           
-  street_address: string; 
+  alias: string;
+  streetAddress: string;
   city: string;
-  state: string;        
-  postal_code?: string;
+  state: string;
+  postalCode?: string;
   country?: string;
-  additional_info?: string;
-  is_default?: boolean;
+  additionalInfo?: string;
+  isDefault?: boolean;
 }

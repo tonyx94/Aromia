@@ -1,5 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsInt, IsNumber, IsOptional, IsPositive, IsString, MaxLength } from 'class-validator';
+import { IsArray, IsDateString, IsInt, IsNumber, IsOptional, IsPositive, IsString, MaxLength, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class CreateOrderItemDto {
+  @ApiProperty({ example: 1 })
+  @IsInt()
+  product_id: number;
+
+  @ApiProperty({ example: 2 })
+  @IsInt()
+  @IsPositive()
+  quantity: number;
+
+  @ApiProperty({ example: 25.50 })
+  @IsNumber()
+  @IsPositive()
+  unit_price: number;
+
+  @ApiProperty({ example: 51.00 })
+  @IsNumber()
+  @IsPositive()
+  total: number;
+}
 
 export class CreateOrderDto {
   @ApiProperty({ example: 'ORD-2025-0001' })
@@ -63,4 +85,17 @@ export class CreateOrderDto {
   @IsOptional()
   @IsDateString()
   delivered_at?: Date;
+
+  @ApiProperty({
+    type: [CreateOrderItemDto],
+    required: false,
+    example: [
+      { product_id: 1, quantity: 2, unit_price: 25.50, total: 51.00 }
+    ]
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateOrderItemDto)
+  items?: CreateOrderItemDto[];
 }

@@ -17,7 +17,7 @@ import { CheckoutStateService } from 'src/app/services/checkout-state.service';
   imports: [IonicModule, CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class PaymentSelectionPage implements OnInit, OnDestroy {
-  paymentMethods$!: Observable<PaymentMethod[]>;
+  paymentMethods: { id: number, name: string, description: string, selected: boolean }[] = [];
   paymentForm: FormGroup;
   private formSubscription!: Subscription;
 
@@ -29,18 +29,13 @@ export class PaymentSelectionPage implements OnInit, OnDestroy {
   ) { this.paymentForm = this.fb.group({ method: [null, Validators.required] }); }
 
   ngOnInit(): void {
-    let allMethods: PaymentMethod[] = [];
-    this.paymentMethods$ = this.checkoutService.getPaymentMethods().pipe(
-      tap(methods => allMethods = methods),
-      catchError(() => of([]))
-    );
-    this.formSubscription = this.paymentForm.get('method')!.valueChanges.subscribe(selectedId => {
-      const selectedMethod = allMethods.find(m => m.id === selectedId) || null;
-      this.checkoutState.setPaymentMethod(selectedMethod);
-    });
+    this.paymentMethods = [
+      { id: 0, name: "Efectivo", description: 'Dinero en formato físico para uso inmediato.', selected: true },
+      { id: 1, name: "Sinpe movil", description: 'Es un servicio para realizar transferencias. ', selected: true },
+    ]
   }
-  
+
   proceedToConfirmation(): void { if (this.paymentForm.valid) { this.router.navigate(['/checkout/confirmation']); } }
-  
+
   ngOnDestroy(): void { this.formSubscription?.unsubscribe(); }
 }

@@ -1,5 +1,5 @@
 <ion-header>
-    <aromia-header></aromia-header>
+    <aromia-header [products]="products" (openCart)="setOpenCart($event)"></aromia-header>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -37,26 +37,34 @@
 
     <div class="status-container">
         <h5 class="bold">Mis pedidos</h5>
+        @if (orders.length === 0) {
+        <div class="empty-state">
+            <p>No tienes pedidos activos.</p>
+        </div>
+        }
+        @for (order of orders; track order.id) {
         <div class="status">
             <ion-item detail button lines="none">
                 <ion-label>
-                    <h3 class="bold color-dark">Pedido #12954</h3>
-                    <p>Tu pedido esta en preparación</p>
+                    <h3 class="bold color-dark">Pedido #{{ order.order_number }}</h3>
+                    <!-- <p>Estado: {{ order.status?? 'Pendiente' }}</p> -->
                 </ion-label>
-
             </ion-item>
 
             <div class="progress-container">
                 <div class="progress">
-                    <div class="bar active"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
+                    <div class="bar"
+                        [class.active]="getOrderProgress(order.status) >= 1 || getOrderProgress(order.status) == null">
+                    </div>
+                    <div class="bar" [class.active]="getOrderProgress(order.status) >= 2"></div>
+                    <div class="bar" [class.active]="getOrderProgress(order.status) >= 3"></div>
                 </div>
                 <div class="date">
-                    <ion-chip color="primary" [outline]="false">15 Dic 25</ion-chip>
+                    <ion-chip color="primary" [outline]="false">{{ order.created_at | date:'dd MMM yy' }}</ion-chip>
                 </div>
             </div>
         </div>
+        }
     </div>
 
     <div class="recommended-container">
@@ -82,3 +90,23 @@
 <ion-footer>
     <ion-button mode="ios" (click)="goTo()" expand="block">Ver productos</ion-button>
 </ion-footer>
+
+<ion-modal [isOpen]="isCartOpen">
+    <ng-template>
+
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="end">
+                    <ion-button (click)="setOpenCart(false)">Cerrar</ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="p-26">
+            <aromia-cart (ready)="setOpenCart(!$event)"></aromia-cart>
+        </ion-content>
+
+
+
+
+    </ng-template>
+</ion-modal>

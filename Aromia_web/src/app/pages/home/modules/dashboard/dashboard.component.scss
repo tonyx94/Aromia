@@ -1,13 +1,14 @@
 .container-grid {
   display: grid;
   gap: 2rem;
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr;
+  color: #ffffff;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  
+
   > :nth-child(1) {
     grid-column: 1 / -1;
   }

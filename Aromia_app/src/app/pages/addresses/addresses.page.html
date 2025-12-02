@@ -14,30 +14,21 @@
       <ion-label>
         <h2>{{ addr.alias }}</h2>
         <p>
-          {{ addr.street_address }}, {{ addr.city }}, {{ addr.state }}
-          <span *ngIf="addr.postal_code">({{ addr.postal_code }})</span>
+          {{ addr.streetAddress }}, {{ addr.city }}, {{ addr.state }}
+          <span *ngIf="addr.postalCode">({{ addr.postalCode }})</span>
         </p>
-        <p *ngIf="addr.additional_info">{{ addr.additional_info }}</p>
-        <p *ngIf="addr.is_default" class="default-badge">Predeterminada</p>
+        <p *ngIf="addr.additionalInfo">{{ addr.additionalInfo }}</p>
+        <p *ngIf="addr.isDefault" class="default-badge">Predeterminada</p>
       </ion-label>
 
       <ion-buttons slot="end">
         <ion-button size="small" (click)="editAddress(addr)">
           Editar
         </ion-button>
-        <ion-button
-          size="small"
-          color="danger"
-          (click)="deleteAddress(addr)"
-        >
+        <ion-button size="small" color="danger" (click)="deleteAddress(addr)">
           Eliminar
         </ion-button>
-        <ion-button
-          size="small"
-          color="medium"
-          *ngIf="!addr.is_default"
-          (click)="setAsDefault(addr)"
-        >
+        <ion-button size="small" color="medium" *ngIf="!addr.isDefault" (click)="setAsDefault(addr)">
           Predeterminada
         </ion-button>
       </ion-buttons>
@@ -60,10 +51,7 @@
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <ion-item>
           <ion-label position="stacked">Alias</ion-label>
-          <ion-input
-            formControlName="alias"
-            placeholder="Casa, Trabajo..."
-          ></ion-input>
+          <ion-input formControlName="alias" placeholder="Casa, Trabajo..."></ion-input>
         </ion-item>
 
         <ion-item>
@@ -93,9 +81,7 @@
 
         <ion-item>
           <ion-label position="stacked">Información adicional</ion-label>
-          <ion-textarea
-            formControlName="additional_info"
-          ></ion-textarea>
+          <ion-textarea formControlName="additional_info"></ion-textarea>
         </ion-item>
 
         <ion-item lines="none">
@@ -103,12 +89,7 @@
           <ion-toggle formControlName="is_default"></ion-toggle>
         </ion-item>
 
-        <ion-button
-          expand="block"
-          type="submit"
-          [disabled]="form.invalid"
-          class="ion-margin-top"
-        >
+        <ion-button expand="block" type="submit" [disabled]="form.invalid" class="ion-margin-top">
           {{ form.value.id ? 'Actualizar' : 'Guardar' }}
         </ion-button>
       </form>

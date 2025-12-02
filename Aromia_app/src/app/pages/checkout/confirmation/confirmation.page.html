@@ -1,13 +1,63 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>confirmation</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/checkout/payment-selection"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Dirección de Entrega</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">confirmation</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <div class="search-container">
+    <ion-searchbar [(ngModel)]="searchQuery" placeholder="Buscar dirección..." (ionInput)="onSearchInput($event)"
+      (ionClear)="onSearchClear()" debounce="500"></ion-searchbar>
+
+    <ion-list *ngIf="searchResults.length > 0" class="search-results">
+      <ion-item *ngFor="let result of searchResults" button (click)="selectSearchResult(result)">
+        <ion-label>
+          <h3>{{ result.display_name }}</h3>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="map-wrapper">
+    <div id="map" class="map-container"></div>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="location-fab">
+      <ion-fab-button (click)="getCurrentLocation()" size="small">
+        <ion-icon class="color-light" name="locate-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+
+  <ion-card *ngIf="selectedAddress" class="address-card">
+    <ion-card-header>
+      <ion-card-title>Dirección Seleccionada</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-icon name="location" slot="start" color="primary"></ion-icon>
+        <ion-label class="ion-text-wrap">
+          <p>{{ selectedAddress }}</p>
+          <p class="coordinates">
+            Lat: {{ selectedCoordinates.lat.toFixed(6) }},
+            Lng: {{ selectedCoordinates.lng.toFixed(6) }}
+          </p>
+        </ion-label>
+        <ion-button slot="end" fill="clear" (click)="addFavoriteDirection()">
+          <ion-icon slot="icon-only" [name]="isFavorite ? 'heart' : 'heart-outline'"
+            [color]="isFavorite ? 'danger' : 'medium'"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+
+  <div class="button-container">
+    <ion-button expand="block" [disabled]="!selectedAddress" (click)="confirmAddress()">
+      Confirmar Dirección y Crear Orden
+    </ion-button>
+  </div>
 </ion-content>
