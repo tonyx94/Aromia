@@ -9,7 +9,7 @@ import { StorageKey, StorageService } from 'src/app/services/storage.service';
 import { AromiaCartComponent } from 'src/app/components/aromia-cart/aromia-cart.component';
 import { OrdersService } from 'src/app/services/orders.service';
 import { Order } from 'src/app/models/order';
-import { DatePipe } from '@angular/common';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 
 
 @Component({
@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonFooter, IonChip, IonLabel, IonItem, IonButton, IonHeader, IonContent, AromiaHeaderComponent, IonModal, IonButtons, AromiaCartComponent, IonToolbar, DatePipe],
+  imports: [IonFooter, IonChip, IonLabel, IonItem, IonButton, IonHeader, IonContent, AromiaHeaderComponent, IonModal, IonButtons, AromiaCartComponent, IonToolbar, DatePipe, CurrencyPipe],
 })
 export class HomePage implements OnInit, OnDestroy {
   products: Product[] = [];
@@ -142,17 +142,23 @@ export class HomePage implements OnInit, OnDestroy {
     this.route.navigate(['/products']);
   }
 
-  getOrderProgress(status: string): number {
-    if (status == null) {
-      status = "pending"
-    }
-    const statusLower = status.toLowerCase();
-    if (['pending', 'confirmed'].includes(statusLower)) {
+  goToOrder(orderId: number) {
+    this.route.navigate(['/orders', orderId]);
+  }
+
+  getOrderProgress(status: any): number {
+    console.log(status)
+    const statusLower = status.name.toLowerCase();
+    if (['pendiente', 'pending', 'confirmed'].includes(statusLower)) {
       return 1;
-    } else if (['processing', 'preparing'].includes(statusLower)) {
+    } else if (['en proceso', 'processing', 'preparing'].includes(statusLower)) {
       return 2;
-    } else if (['shipped', 'delivered'].includes(statusLower)) {
+    } else if (['en camino', 'shipped', 'delivered'].includes(statusLower)) {
       return 3;
+    } else if (['entregando', 'shipped', 'delivered'].includes(statusLower)) {
+      return 4;
+    } else if (['finalizado', 'shipped', 'delivered'].includes(statusLower)) {
+      return 5;
     }
     return 1; // Default to 1
   }

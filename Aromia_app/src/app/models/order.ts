@@ -8,7 +8,7 @@ export interface OrderItem {
 export interface Order {
   id: number;
   orderNumber: string;
-  status: string;
+  status: any;
   totalAmount: number;
   created_at: string;
   order_number: string;

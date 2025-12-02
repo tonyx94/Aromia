@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { ChipsModule } from 'primeng/chips';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -21,7 +22,7 @@ import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { DropdownModule } from 'primeng/dropdown';
 import { Button } from 'primeng/button';
 import { Toast } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
@@ -42,7 +43,7 @@ import { ENDPOINTS } from '../../../../../environments/endpoints';
     Button,
     Toast,
     AvatarModule,
-    MultiSelectModule,
+    DropdownModule,
     FormsModule,
     FloatLabel,
     CommonModule,
@@ -53,6 +54,7 @@ import { ENDPOINTS } from '../../../../../environments/endpoints';
     TooltipModule,
     ReactiveFormsModule,
     InputTextModule,
+    PasswordModule,
     InputMaskModule,
     ChipsModule,
     ButtonModule,
@@ -105,83 +107,88 @@ export class UsersComponent implements OnInit {
     private toast: MessageService,
   ) {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      lastname: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       phone: ['', Validators.required],
-      position: ['user', Validators.required],
-      rol: [[], Validators.required],
-      color: ['#222222'],
-      emailCompany: [''],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      roleId: [null, Validators.required],
+      isActive: [true]
     });
 
     this.formUpdate = this.fb.group({
-      user_id: ['', Validators.required],
-      name: ['', Validators.required],
-      lastname: ['', Validators.required],
+      id: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       phone: ['', Validators.required],
-      position: ['user', Validators.required],
-      rol: [[], Validators.required],
-      color: ['#222222'],
-      emailCompany: [''],
+      email: ['', [Validators.required, Validators.email]],
+      roleId: [null, Validators.required],
+      isActive: [true]
     });
   }
 
   ngOnInit(): void {
     this.getUsers();
+    this.getRoles();
+  }
+
+  getRoles() {
+    this.api.get(ENDPOINTS.ROLES.GET_ALL).subscribe({
+      next: (response: any) => {
+        this.roles = response;
+      },
+      error: (e) => {
+        console.error('Error fetching roles', e);
+      }
+    });
   }
 
   submit(type: 'create' | 'update') {
-    console.log(this.form);
-
     this.isLoading = true;
 
     if (type == 'create') {
-      // this.api.users.createUser(this.form.value).subscribe({
-      //   next: (response) => {
-      //     this.users = response;
-      //     this.isLoading = false;
-      //     this.messageService.add({
-      //       severity: 'success', 
-      //       summary: 'Usuario agregado',
-      //       detail: `${this.form.value.name} ${this.form.value.lastname} fue agregado`,
-      //     });
-      //     this.form.reset();
-      //     this.formSubmitted = false;
-      //     this.getUsers();
-      //   },
-      //   error: (e) => {
-      //     this.isLoading = false;
-      //     console.log(e);
-      //   },
-      // });
+      if (this.form.invalid) {
+        this.isLoading = false;
+        this.form.markAllAsTouched();
+        return;
+      }
+
+      const payload = {
+        ...this.form.value,
+        roleId: this.form.value.roleId.id // Assuming multiselect returns object
+      };
+
+      this.api.post(ENDPOINTS.ADMINS.CREATE, payload).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Usuario agregado',
+            detail: `${this.form.value.firstName} ${this.form.value.lastName} fue agregado`,
+          });
+          this.form.reset();
+          this.formSubmitted = false;
+          this.getUsers();
+        },
+        error: (e) => {
+          this.isLoading = false;
+          console.log(e);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: e.error?.message || 'No se pudo crear el usuario'
+          });
+        },
+      });
     }
 
     if (type == 'update') {
-      console.log(this.formUpdate.value)
-      // this.api.users.update(this.formUpdate.value).subscribe({
-      //   next: (response) => {
-      //     this.users = response;
-      //     this.isLoading = false;
-      //     this.visible = false;
-      //     this.messageService.add({
-      //       severity: 'success',
-      //       summary: 'Usuario actualizado',
-      //       detail: `${this.formUpdate.value.name} ${this.formUpdate.value.lastname} fue actualizado`,
-      //     });
-      //     this.formUpdate.reset();
-      //     this.formSubmitted = false;
-      //     this.getUsers();
-      //   },
-      //   error: (e) => {
-      //     this.isLoading = false; 
-      //     console.log(e);
-      //   },
-      // });
+      // Update logic implementation pending
     }
   }
 
   getUsers() {
-    this.api.get(ENDPOINTS.CLIENTS.GET_ALL).subscribe({
+    this.api.get(ENDPOINTS.ADMINS.GET_ALL).subscribe({
       next: (response: any) => {
         this.users = response;
         this.usersFiltered = [...this.users]

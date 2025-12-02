@@ -1,18 +1,16 @@
 <div class="p-26">
     <form [formGroup]="form!" (ngSubmit)="submit('create')" class="flex flex-col gap-4 p-fluid">
-
         <p class="color-medium body-sm">Registrar nuevo usuario</p>
         <div class="flex flex-row gap-6">
             <p-floatlabel class="flex flex-1" variant="on">
-                <input class="w-full" pInputText id="name" formControlName="name" autocomplete="off" />
-                <label for="name">Nombre</label>
+                <input class="w-full" pInputText id="firstName" formControlName="firstName" autocomplete="off" />
+                <label for="firstName">Nombre</label>
             </p-floatlabel>
 
             <p-floatlabel class="flex flex-1" variant="on">
-                <input class="w-full" pInputText id="lastname" formControlName="lastname" autocomplete="off" />
-                <label for="lastname">Apellido</label>
+                <input class="w-full" pInputText id="lastName" formControlName="lastName" autocomplete="off" />
+                <label for="lastName">Apellido</label>
             </p-floatlabel>
-
         </div>
 
         <div class="flex flex-row gap-6">
@@ -22,20 +20,26 @@
             </p-floatlabel>
 
             <p-floatlabel class="flex flex-1" variant="on">
-                <input class="w-full" pInputText id="emailCompany" formControlName="emailCompany" autocomplete="off" />
-                <label for="emailCompany">Email corporativo</label>
+                <input class="w-full" pInputText id="email" formControlName="email" autocomplete="off" />
+                <label for="email">Email</label>
             </p-floatlabel>
         </div>
 
+        <div class="flex flex-row gap-6">
+            <p-floatlabel class="flex flex-1" variant="on">
+                <p-password class="w-full" [toggleMask]="true" id="password" formControlName="password"
+                    [feedback]="false" />
+                <label for="password">Contraseña</label>
+            </p-floatlabel>
 
+            <div class="flex flex-1">
+                <p-dropdown class="w-full" [options]="roles" optionLabel="name" formControlName="roleId"
+                    placeholder="Seleccione un rol" [showClear]="true" />
+            </div>
+        </div>
 
         <div class="flex flex-row gap-6">
-            <div class="flex flex-1">
-                <p-multiselect class="w-full" [options]="roles" display="chip" formControlName="rol" optionLabel=""
-                    placeholder="Seleccione los roles" [maxSelectedLabels]="5" [fluid]="true" />
-            </div>
-
-
+            <div class="flex flex-1"></div>
             <div class="flex flex-1">
                 <p-button class="w-full" class="flex flex-1" type="submit" label="Guardar" />
                 @if(isLoading) {
@@ -43,10 +47,7 @@
                     [style]="{ width: '32px', height: '32px' }" />
                 }
             </div>
-
         </div>
-
-
     </form><br><br>
 
     <p-divider></p-divider>
@@ -98,12 +99,13 @@
                             shape="circle" />
                     </div>
                 </td>
-                <td (click)="showDialog(true, user)">{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}</td>
-      
+                <td (click)="showDialog(true, user)">{{ user.firstName | titlecase }} {{ user.lastName | titlecase }}
+                </td>
+
                 <td (click)="showDialog(true, user)">{{ user.email }}</td>
 
                 <td (click)="showDialog(true, user)">{{ user.phone }}</td>
-                
+
 
 
                 <td (click)="showDialog(true, user)">
@@ -124,19 +126,17 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '50vw', height: '80vh' }"
     [draggable]="false" [resizable]="false">
     <form [formGroup]="formUpdate!" (ngSubmit)="submit('update')" class="flex flex-col gap-4 p-fluid">
-
         <p class="color-medium body-sm">Actualizar usuario </p>
         <div class="flex flex-row gap-6">
             <p-floatlabel class="flex flex-1" variant="on">
-                <input class="w-full" pInputText id="name" formControlName="name" autocomplete="off" />
-                <label for="name">Nombre</label>
+                <input class="w-full" pInputText id="firstName" formControlName="firstName" autocomplete="off" />
+                <label for="firstName">Nombre</label>
             </p-floatlabel>
 
             <p-floatlabel class="flex flex-1" variant="on">
-                <input class="w-full" pInputText id="lastname" formControlName="lastname" autocomplete="off" />
-                <label for="lastname">Apellido</label>
+                <input class="w-full" pInputText id="lastName" formControlName="lastName" autocomplete="off" />
+                <label for="lastName">Apellido</label>
             </p-floatlabel>
-
         </div>
 
         <div class="flex flex-row gap-6">
@@ -146,19 +146,16 @@
             </p-floatlabel>
 
             <p-floatlabel class="flex flex-1" variant="on">
-                <input class="w-full" pInputText id="emailCompany" formControlName="emailCompany" autocomplete="off" />
-                <label for="emailCompany">Email corporativo</label>
+                <input class="w-full" pInputText id="email" formControlName="email" autocomplete="off" />
+                <label for="email">Email</label>
             </p-floatlabel>
         </div>
 
-
-
         <div class="flex flex-row gap-6">
             <div class="flex flex-1">
-                <p-multiselect class="w-full" [options]="roles" display="chip" formControlName="rol" optionLabel=""
-                    placeholder="Seleccione los roles" [maxSelectedLabels]="5" [fluid]="true" />
+                <p-dropdown class="w-full" [options]="roles" optionLabel="name" formControlName="roleId"
+                    placeholder="Seleccione un rol" [showClear]="true" />
             </div>
-
 
             <div class="flex flex-1">
                 <p-button class="w-full" class="flex flex-1" type="submit" label="Actualizar" />
@@ -167,14 +164,10 @@
                     [style]="{ width: '32px', height: '32px' }" />
                 }
             </div>
-
-
-            
-
         </div><br>
 
         <div class="flex flex-col align-middle justify-center gap-3">
-            <p-button variant="outlined"  (click)="resetUserPassword()" [disabled]="resetting"
+            <p-button variant="outlined" (click)="resetUserPassword()" [disabled]="resetting"
                 *ngIf="!tempPasswordGenerated">
                 {{ resetting ? 'Generando...' : '🔑 Restablecer Contraseña' }}
             </p-button>
@@ -183,16 +176,16 @@
                 <div class="alert alert-success">
                     <p class="body-sm color-medium">Contraseña Temporal Generada</p>
                     <div>
-                        <div class="temp-password"  (click)="copyToClipboard()">
+                        <div class="temp-password" (click)="copyToClipboard()">
                             <span>{{ tempPassword }}</span>
 
                             <i class="pi pi-clone color-medium" style="font-size: 1rem"></i>
                         </div>
-                        
+
                     </div>
                     <p><small>💡 El usuario deberá cambiar su contraseña al iniciar sesión</small></p>
                     <p><small>⏰ Válido por 24 horas</small></p>
-                    
+
                 </div>
             </div>
         </div>

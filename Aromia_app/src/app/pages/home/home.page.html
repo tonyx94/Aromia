@@ -43,11 +43,14 @@
         </div>
         }
         @for (order of orders; track order.id) {
-        <div class="status">
+        <div class="status" (click)="goToOrder(order.id)">
             <ion-item detail button lines="none">
                 <ion-label>
-                    <h3 class="bold color-dark">Pedido #{{ order.order_number }}</h3>
-                    <!-- <p>Estado: {{ order.status?? 'Pendiente' }}</p> -->
+                    <div class="flex-between">
+                        <h3 class="bold color-dark">Pedido #{{ order.order_number }}</h3>
+                        <h3 class="bold color-primary">{{ order.totalAmount | currency:'CRC':'symbol-narrow' }}</h3>
+                    </div>
+                    <p>Estado: <span class="bold color-danger">{{ order.status.name ?? 'Pendiente' }}</span> </p>
                 </ion-label>
             </ion-item>
 
@@ -58,10 +61,13 @@
                     </div>
                     <div class="bar" [class.active]="getOrderProgress(order.status) >= 2"></div>
                     <div class="bar" [class.active]="getOrderProgress(order.status) >= 3"></div>
+                    <div class="bar" [class.active]="getOrderProgress(order.status) >= 4"></div>
+                    <div class="bar" [class.active]="getOrderProgress(order.status) >= 5"></div>
                 </div>
-                <div class="date">
-                    <ion-chip color="primary" [outline]="false">{{ order.created_at | date:'dd MMM yy' }}</ion-chip>
-                </div>
+
+            </div>
+            <div style="margin-top: 6px;" class="date">
+                <ion-chip color="primary" [outline]="false">{{ order.created_at | date:'dd MMM yy' }}</ion-chip>
             </div>
         </div>
         }

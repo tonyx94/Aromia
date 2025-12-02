@@ -6,56 +6,53 @@ import {
   Param,
   Put,
   Post,
-  Req,
-  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../guard/jwt-auth.guard';
 import { CustomerAddressesService } from './customer-addresses.service';
 import { CreateCustomerAddressDto } from './dto/create-customer-address.dto';
 import { UpdateCustomerAddressDto } from './dto/update-customer-address.dto';
 
 @ApiTags('customer-addresses-me')
-@ApiTags('customer-addresses-me')
 @Controller('customers/me/addresses')
 export class CustomerAddressesMeController {
   constructor(private readonly service: CustomerAddressesService) { }
 
-  private getCustomerId(req: any): number {
-    return Number(req.user?.id ?? req.user?.userId ?? req.user?.sub ?? 3);
-  }
-
   @Get()
-  findAll(@Req() req: any) {
-    const customerId = this.getCustomerId(req);
+  findAll(@Query('customer_id') customerId: number) {
     return this.service.findAllByCustomer(customerId);
   }
 
   @Post()
-  create(@Req() req: any, @Body() dto: CreateCustomerAddressDto) {
-    const customerId = this.getCustomerId(req);
-    return this.service.createForCustomer(customerId, dto);
+  create(@Body() dto: CreateCustomerAddressDto & { customer_id: number }) {
+    const { customer_id, ...addressDto } = dto;
+    console.log('POST /customers/me/addresses - Received customer_id:', customer_id);
+    console.log('POST /customers/me/addresses - Full DTO:', dto);
+    return this.service.createForCustomer(customer_id, addressDto);
   }
 
   @Put(':id')
   update(
-    @Req() req: any,
     @Param('id') id: string,
-    @Body() dto: UpdateCustomerAddressDto,
+    @Body() dto: UpdateCustomerAddressDto & { customer_id: number },
   ) {
-    const customerId = this.getCustomerId(req);
-    return this.service.updateForCustomer(customerId, Number(id), dto);
+    const { customer_id, ...addressDto } = dto;
+    console.log('PUT /customers/me/addresses/:id - Received customer_id:', customer_id);
+    console.log('PUT /customers/me/addresses/:id - Address ID:', id);
+    return this.service.updateForCustomer(customer_id, Number(id), addressDto);
   }
 
   @Delete(':id')
-  remove(@Req() req: any, @Param('id') id: string) {
-    const customerId = this.getCustomerId(req);
+  remove(@Body('customer_id') customerId: number, @Param('id') id: string) {
+    console.log('DELETE /customers/me/addresses/:id - Received customer_id:', customerId);
+    console.log('DELETE /customers/me/addresses/:id - Address ID:', id);
     return this.service.removeForCustomer(customerId, Number(id));
   }
 
   @Put(':id/default')
-  setDefault(@Req() req: any, @Param('id') id: string) {
-    const customerId = this.getCustomerId(req);
+  setDefault(@Body('customer_id') customerId: number, @Param('id') id: string) {
+    console.log('PUT /customers/me/addresses/:id/default - Received customer_id:', customerId);
+    console.log('PUT /customers/me/addresses/:id/default - Address ID:', id);
     return this.service.setDefaultForCustomer(customerId, Number(id));
   }
 }

@@ -25,6 +25,7 @@ import { AddressService } from 'src/app/services/adress.service';
 export class AddressesPage implements OnInit {
   addresses: Address[] = [];
   loading = false;
+  customerId: number = 0;
 
   // El mismo formulario sirve para crear y editar
   form = this.fb.group({
@@ -46,13 +47,19 @@ export class AddressesPage implements OnInit {
     private toastCtrl: ToastController,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    // Retrieve customerId from localStorage
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      this.customerId = user.id;
+    }
     this.loadAddresses();
   }
 
   loadAddresses() {
     this.loading = true;
-    this.addressService.getAddresses().subscribe({
+    this.addressService.getAddresses(this.customerId).subscribe({
       next: (list) => {
         this.addresses = list;
         this.loading = false;
@@ -108,7 +115,7 @@ export class AddressesPage implements OnInit {
           role: 'destructive',
           handler: () => {
             if (!addr.id) return;
-            this.addressService.deleteAddress(addr.id).subscribe({
+            this.addressService.deleteAddress(this.customerId, addr.id).subscribe({
               next: async () => {
                 this.loadAddresses();
                 const toast = await this.toastCtrl.create({
@@ -129,7 +136,7 @@ export class AddressesPage implements OnInit {
 
   setAsDefault(addr: Address) {
     if (!addr.id) return;
-    this.addressService.setDefault(addr.id).subscribe({
+    this.addressService.setDefault(this.customerId, addr.id).subscribe({
       next: async () => {
         this.loadAddresses();
         const toast = await this.toastCtrl.create({
@@ -161,7 +168,7 @@ export class AddressesPage implements OnInit {
 
     if (id) {
       // actualizar
-      this.addressService.updateAddress(id, payload).subscribe({
+      this.addressService.updateAddress(this.customerId, id, payload).subscribe({
         next: async () => {
           this.loadAddresses();
           const toast = await this.toastCtrl.create({
@@ -174,7 +181,7 @@ export class AddressesPage implements OnInit {
       });
     } else {
       // crear nueva
-      this.addressService.addAddress(payload).subscribe({
+      this.addressService.addAddress(this.customerId, payload).subscribe({
         next: async () => {
           this.loadAddresses();
           this.newAddress();

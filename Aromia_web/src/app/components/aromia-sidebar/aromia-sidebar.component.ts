@@ -26,13 +26,13 @@ export class AromiaSidebarComponent implements OnInit {
   private local = inject(StorageService)
 
   checked!: any;
- 
+
   buttons = [
-    {name: "Dashboard", reference: "dashboard", navigate: 'dashboard', icon: 'pi pi-th-large', selected: false, active: true},
-    {name: "Pedidos", reference: "pedidos", navigate: 'pedidos', icon: 'pi pi-file-edit', selected: false, active: true},
-    {name: "Productos", reference: "productos", navigate: 'products', icon: 'pi pi-apple', selected: false, active: true},
-    {name: "Clientes", reference: "clientes", navigate: 'clients', icon: 'pi pi-users', selected: false, active: true},
-    {name: "Usuarios", reference: "usuarios", navigate: 'users', icon: 'pi pi-user', selected: false, active: true},
+    { name: "Dashboard", reference: "dashboard", navigate: 'dashboard', icon: 'pi pi-th-large', selected: false, active: true },
+    { name: "Pedidos", reference: "pedidos", navigate: 'pedidos', icon: 'pi pi-file-edit', selected: false, active: true },
+    { name: "Productos", reference: "productos", navigate: 'products', icon: 'pi pi-apple', selected: false, active: true },
+    { name: "Clientes", reference: "clientes", navigate: 'clients', icon: 'pi pi-users', selected: false, active: true },
+    { name: "Usuarios", reference: "usuarios", navigate: 'users', icon: 'pi pi-user', selected: false, active: true },
 
   ]
 
@@ -41,19 +41,19 @@ export class AromiaSidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.local.get<IUser>(StorageKey.User).then((u) => {
-      if(!u) return
+      if (!u) return
       this.user = u
-      
+
       // this.user.rol.map((b) => b.toLowerCase())
       // this.activateButtons()
     })
 
-    
+
   }
 
   activateButtons() {
-    this.buttons.map((b) => 
-      this.user.rol.includes(b.name)? b.active = true: b.active = false 
+    this.buttons.map((b) =>
+      this.user.rol.includes(b.name) ? b.active = true : b.active = false
     )
 
     const buttons = [...this.buttons]
@@ -73,13 +73,13 @@ export class AromiaSidebarComponent implements OnInit {
   }
 
   navigate(button: any) {
-    this.buttons.forEach((b) =>  b == button ? b.selected = true : b.selected = false )
+    this.buttons.forEach((b) => b == button ? b.selected = true : b.selected = false)
     this.local.set(StorageKey.CurrentModule, button.navigate)
     this.route.navigateByUrl(`/home/${button.navigate}`)
   }
 
   getStatusButton(status: boolean) {
-    return status? undefined:'text' 
+    return status ? undefined : 'text'
   }
 
   getColorForUser(user: any): string {
@@ -125,7 +125,8 @@ export class AromiaSidebarComponent implements OnInit {
   }
 
   signup() {
-    //this.api.signup();
+    this.local.removeAll().then(() => {
+      this.route.navigate(['login'])
+    })
   }
 }
- 

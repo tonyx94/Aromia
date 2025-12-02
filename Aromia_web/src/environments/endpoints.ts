@@ -30,6 +30,13 @@ export const ENDPOINTS = {
     CREATE: 'products',
     UPDATE: (id: string) => `products/${id}`,
     DELETE: (id: string) => `products/${id}`,
+  },
+  ROLES: {
+    GET_ALL: 'roles',
+    GET_BY_ID: (id: string) => `roles/${id}`,
+    CREATE: 'roles',
+    UPDATE: (id: string) => `roles/${id}`,
+    DELETE: (id: string) => `roles/${id}`,
   }
 
 };

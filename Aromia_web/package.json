@@ -7,7 +7,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "deploy:production": "ng build --configuration production; scp -r dist/aromia_web/ tony@66.29.143.245:/var/www/html/aromia/aromia_web/"
     
   },
   "private": true,

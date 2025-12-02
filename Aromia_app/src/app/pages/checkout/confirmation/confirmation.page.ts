@@ -301,6 +301,19 @@ export class ConfirmationPage implements OnInit {
       return;
     }
 
+    // Ensure user is loaded
+    if (!this.user || !this.user.id) {
+      const toast = await this.toastController.create({
+        message: 'Error: Usuario no identificado. Por favor, inicia sesión nuevamente.',
+        duration: 3000,
+        color: 'danger'
+      });
+      await toast.present();
+      return;
+    }
+
+    console.log('addFavoriteDirection - User ID:', this.user.id);
+
     const loading = await this.loadingController.create({
       message: 'Guardando dirección favorita...'
     });
@@ -312,7 +325,8 @@ export class ConfirmationPage implements OnInit {
 
       // Set as default/favorite
       if (this.savedAddressId) {
-        await this.addressService.setDefault(this.savedAddressId).toPromise();
+        console.log('Setting default - User ID:', this.user.id, 'Address ID:', this.savedAddressId);
+        await this.addressService.setDefault(this.user.id, this.savedAddressId).toPromise();
         this.isFavorite = true;
 
         await loading.dismiss();
@@ -464,6 +478,10 @@ export class ConfirmationPage implements OnInit {
       return; // Address already saved
     }
 
+    if (!this.user || !this.user.id) {
+      throw new Error('Usuario no identificado');
+    }
+
     const addressData: Address = {
       alias: 'Dirección de entrega',
       streetAddress: this.selectedAddress,
@@ -474,7 +492,11 @@ export class ConfirmationPage implements OnInit {
       isDefault: false
     };
 
-    const savedAddress = await this.addressService.addAddress(addressData).toPromise();
+    console.log('saveAddressIfNeeded - User ID:', this.user.id);
+    console.log('saveAddressIfNeeded - Address Data:', addressData);
+
+    const savedAddress = await this.addressService.addAddress(this.user.id, addressData).toPromise();
+    console.log('saveAddressIfNeeded - Saved Address:', savedAddress);
     this.savedAddressId = savedAddress?.id || null;
   }
 

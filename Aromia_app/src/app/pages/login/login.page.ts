@@ -19,8 +19,8 @@ export class LoginPage implements OnInit {
   form!: FormGroup;
   constructor(private local: StorageService, private api: AromiaApi, private route: Router, private fb: FormBuilder) {
     this.form = this.fb.group({
-      email: ['tony18x@gmail.com', Validators.email],
-      password: ['123123', [Validators.required, Validators.minLength(6)]],
+      email: ['', Validators.email],
+      password: ['', [Validators.required, Validators.minLength(6)]],
       userType: ['customer', Validators.required],
     });
   }

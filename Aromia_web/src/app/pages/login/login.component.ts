@@ -30,7 +30,7 @@ import { ENDPOINTS } from '../../../environments/endpoints';
   imports: [
     ReactiveFormsModule,
     ButtonModule,
-    ToggleButtonModule, 
+    ToggleButtonModule,
     CommonModule,
     FormsModule,
     PasswordModule,
@@ -63,14 +63,14 @@ export class LoginComponent implements OnInit {
     private api: ApiAromia,
     private messageService: MessageService,
     private route: Router
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.version = environment.version;
-    
+
     this.loginForm = this.fb.group({
-      email: ['tony18x@gmail.com', Validators.required],
-      password: ['123123', Validators.required],
+      email: [null, Validators.required],
+      password: ['', Validators.required],
       userType: ['admin', Validators.required],
     });
 
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
           this.local.set(StorageKey.Token, response.access_token);
           this.local.set(StorageKey.User, response.user);
           this.message(`Bienvenido ${response.user.name}`, 'success', "Ingreso Exitoso!");
-        
+
           setTimeout(() => {
             this.route.navigateByUrl('home');
           }, 500);
@@ -118,9 +118,9 @@ export class LoginComponent implements OnInit {
         //   this.route.navigateByUrl('/change-password');
         //   return;
         // }
-        
-        
-      }, 
+
+
+      },
       error: (e) => {
         console.log(e);
         this.message(e.error?.message || 'Error al iniciar sesión', 'error');
@@ -139,11 +139,11 @@ export class LoginComponent implements OnInit {
   }
 
   message(message: string, status: 'error' | 'success' | 'info' | 'warning', title?: string, duration?: number) {
-    const summary = 
+    const summary =
       status == 'error' ? 'Algo salió mal' :
-      status == 'success' ? 'Operación exitosa!' :
-      status == 'warning' ? 'Cuidado con esto' :
-      status == 'info' ? 'Ten presente lo siguiente' : "";
+        status == 'success' ? 'Operación exitosa!' :
+          status == 'warning' ? 'Cuidado con esto' :
+            status == 'info' ? 'Ten presente lo siguiente' : "";
 
     this.messageService.add({
       severity: status,
