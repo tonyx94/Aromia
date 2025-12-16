@@ -7,6 +7,7 @@ import { ShoppingCartModule } from '../shopping-cart/shopping-cart.module';
 import { AuthModule } from '../../auth/auth.module';
 import { ProductsModule } from '../products/products.module';
 import { CustomersModule } from '../customers/customers.module';
+import { OrdersGateway } from './orders.gateway';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { CustomersModule } from '../customers/customers.module';
     CustomersModule,
   ],
   controllers: [OrdersController],
-  providers: [OrdersService],
-  exports: [OrdersService],
+  providers: [OrdersService, OrdersGateway],
+  exports: [OrdersService, OrdersGateway],
 })
 export class OrdersModule { }

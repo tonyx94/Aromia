@@ -1,16 +1,21 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Product } from '../../models/products';
 import { StorageService, StorageKey } from '../../services/storage.service';
-import { IonList, IonItem, IonThumbnail, IonBadge, IonFooter, IonContent, IonButton } from "@ionic/angular/standalone";
+import { IonList, IonItem, IonThumbnail, IonBadge, IonFooter, IonContent, IonButton, IonIcon, IonText } from "@ionic/angular/standalone";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AromiaApi } from 'src/app/services/request';
+import { ENDPOINTS } from 'src/environments/endpoints';
+import { addIcons } from 'ionicons';
+import { trashOutline } from 'ionicons/icons';
+
 
 
 @Component({
   selector: 'aromia-cart',
   standalone: true,
-  imports: [IonFooter, IonContent, IonButton, IonBadge, IonItem, IonList, IonThumbnail, IonBadge, CommonModule, FormsModule],
+  imports: [IonText, IonIcon, IonFooter, IonContent, IonButton, IonBadge, IonItem, IonList, IonThumbnail, IonBadge, CommonModule, FormsModule],
   templateUrl: './aromia-cart.component.html',
   styleUrls: ['./aromia-cart.component.scss'],
 })
@@ -18,17 +23,47 @@ export class AromiaCartComponent implements OnInit, AfterViewInit {
   @Output() ready = new EventEmitter<boolean>()
 
   cart: Product[] = [];
+  activeProducts: Product[] = [];
   discountAmount: number = 0;
 
-  constructor(private local: StorageService, private route: Router) { }
+  constructor(private local: StorageService, private route: Router, private api: AromiaApi) {
+    addIcons({ trashOutline });
+  }
 
   ngAfterViewInit(): void {
+    this.validateCart();
+  }
+
+  validateCart() {
     this.local.get<Product[]>(StorageKey.Cart).then((c) => {
       if (c) {
-        this.cart = c
-        console.log("Products in Cart: ", c)
+        this.cart = c;
+        this.checkProductsAvailability();
       }
-    })
+    });
+  }
+
+  checkProductsAvailability() {
+    this.api.get<Product[]>(ENDPOINTS.PRODUCTS.GET_ACTIVE).subscribe((activeProducts) => {
+      this.activeProducts = activeProducts;
+      // Mark unavailable products locally
+      // We don't remove them automatically, just let the user know
+    });
+  }
+
+  isAvailable(product: Product): boolean {
+    if (this.activeProducts.length === 0) return true; // Loading or initial state
+    return this.activeProducts.some(p => p.id === product.id);
+  }
+
+  get hasUnavailableProducts(): boolean {
+    if (this.activeProducts.length === 0) return false;
+    return this.cart.some(p => !this.isAvailable(p));
+  }
+
+  removeProduct(product: Product) {
+    this.cart = this.cart.filter(p => p.id !== product.id);
+    this.local.set(StorageKey.Cart, this.cart);
   }
 
 
@@ -64,6 +99,7 @@ export class AromiaCartComponent implements OnInit, AfterViewInit {
     const discount = this.getDiscount();
     return subtotal + taxes - discount;
   }
+
 
 
 }

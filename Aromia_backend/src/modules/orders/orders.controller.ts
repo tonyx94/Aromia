@@ -40,7 +40,10 @@ export class OrdersController {
 
   @Post()
   @ApiOkResponse({ type: Order })
+  @Post()
+  @ApiOkResponse({ type: Order })
   async createOrder(@Req() req, @Body() createOrderDto: CreateOrderDto): Promise<Order> {
+    console.log('📝 OrdersController.createOrder called with payload:', JSON.stringify(createOrderDto));
     const customerId = req.user?.customerId ?? createOrderDto.customer_id ?? 3;
     return this.ordersService.create({ ...createOrderDto, customer_id: customerId }, customerId);
   }

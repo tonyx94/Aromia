@@ -1,5 +1,6 @@
 export const environment = {
-    production: true,
-    url: "https://aromia.neomind.co.cr/api",
-    version: '1.0.0'
+    production: false,
+    url: "http://localhost:3000/api",
+    wsUrl: "http://localhost:3000",
+    version: '1.0.0 QA'
 };

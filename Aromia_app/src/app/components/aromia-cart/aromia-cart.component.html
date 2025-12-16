@@ -14,10 +14,21 @@
           <p class="m-0 color-medium body-sm description">{{ product.description }}</p>
           <p class=" m-0 color-medium body-sm">{{ product.price | currency }} c/u</p>
           <p class="m-0 bold color-primary body-m">{{ (product.price * product.cant) | currency }} total</p>
+          @if(!isAvailable(product)) {
+          <ion-text color="danger">
+            <p class="m-0 body-sm bold">Producto no disponible</p>
+          </ion-text>
+          }
         </div>
-        @if(product.cant > 0) {
-        <ion-badge color="primary">{{ product.cant }}</ion-badge>
-        }
+
+        <div slot="end" class="ion-text-center">
+          @if(product.cant > 0) {
+          <ion-badge color="primary" class="mb-8">{{ product.cant }}</ion-badge>
+          }
+          <ion-button fill="clear" color="danger" (click)="removeProduct(product)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
 
       </ion-item>
       }
@@ -47,6 +58,7 @@
   </div>
 
   <ion-footer class="px-20" mode="ios">
-    <ion-button (click)="goToCheckout()" class="mt-26" mode="ios" expand="block">Continuar</ion-button>
+    <ion-button [disabled]="hasUnavailableProducts" (click)="goToCheckout()" class="mt-26" mode="ios"
+      expand="block">Continuar</ion-button>
   </ion-footer>
 </ion-content>

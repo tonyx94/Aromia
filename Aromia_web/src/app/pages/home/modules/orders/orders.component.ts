@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrdersService } from '../../../../services/apis/orders.service';
 import { StorageService } from '../../../../services/storage.service';
+import { WebsocketService } from '../../../../services/websocket.service';
 import { Order, OrderStatus } from '../../../../interfaces/order.interface';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -18,6 +19,7 @@ import { of } from 'rxjs';
 export class OrdersComponent implements OnInit, OnDestroy {
   private ordersService = inject(OrdersService);
   private storageService = inject(StorageService);
+  private websocketService = inject(WebsocketService);
 
   private ordersSubject = new BehaviorSubject<Order[]>([]);
   orders$ = this.ordersSubject.asObservable();
@@ -42,6 +44,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
   availableStatuses: string[] = [];
   allStatuses: OrderStatus[] = [];
 
+  private orderCreatedSubscription?: Subscription;
+
   constructor() {
     this.filteredOrders$ = combineLatest([
       this.orders$,
@@ -59,6 +63,33 @@ export class OrdersComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadOrders();
     this.loadAllStatuses();
+    this.subscribeToOrderCreated();
+  }
+
+  private subscribeToOrderCreated() {
+    this.orderCreatedSubscription = this.websocketService.on<Order>('orderCreated').subscribe({
+      next: (newOrder) => {
+        console.log('🔔 New order received via WebSocket:', newOrder);
+
+        // Add the new order to the beginning of the list
+        const currentOrders = this.ordersSubject.value;
+        this.ordersSubject.next([newOrder, ...currentOrders]);
+
+        // Show a notification (you can enhance this with a toast/snackbar)
+        this.showNewOrderNotification(newOrder);
+      },
+      error: (err) => {
+        console.error('Error receiving order via WebSocket:', err);
+      }
+    });
+  }
+
+  private showNewOrderNotification(order: Order) {
+    // Simple browser notification
+    console.log(`✨ Nueva orden recibida: #${order.order_number} de ${order.customer.firstName} ${order.customer.lastName}`);
+
+    // You can enhance this with Angular Material Snackbar or similar
+    // For now, we'll just log it
   }
 
   async loadOrders() {
@@ -348,6 +379,9 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    // Component cleanup
+    // Unsubscribe from WebSocket events
+    if (this.orderCreatedSubscription) {
+      this.orderCreatedSubscription.unsubscribe();
+    }
   }
 }

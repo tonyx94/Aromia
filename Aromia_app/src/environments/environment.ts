@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://aromia.neomind.co.cr/api',
+  baseUrl: 'http://localhost:3000/api',
 };
 
 /*

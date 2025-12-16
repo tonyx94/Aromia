@@ -54,58 +54,59 @@ export class CustomersController {
   }
 
   // Address management endpoints
-  @UseGuards(JwtAuthGuard)
-  @Get('me/addresses')
-  getMyAddresses(@Req() req: any) {
-    const customerId = this.getCustomerIdFromReq(req);
-    console.log('GET /customers/me/addresses - Received customer_id:', customerId);
-    return this.customerAddressesService.findAllByCustomer(customerId);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('me/addresses')
+  // getMyAddresses(@Req() req: any) {
+  //   const customerId = this.getCustomerIdFromReq(req);
+  //   console.log('GET /customers/me/addresses - Received customer_id:', customerId);
+  // console.log('GET /customers/me/addresses - Received customer_id:', customerId);
+  // return this.customerAddressesService.findAllByCustomer(customerId);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('me/addresses')
-  createMyAddress(
-    @Req() req: any,
-    @Body() dto: CreateCustomerAddressDto,
-  ) {
-    const customerId = this.getCustomerIdFromReq(req);
-    console.log('POST /customers/me/addresses - Received customer_id:', customerId);
-    return this.customerAddressesService.createForCustomer(customerId, dto);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Post('me/addresses')
+  // createMyAddress(
+  //   @Req() req: any,
+  //   @Body() dto: CreateCustomerAddressDto,
+  // ) {
+  //   const customerId = this.getCustomerIdFromReq(req);
+  //   console.log('POST /customers/me/addresses - Received customer_id:', customerId);
+  //   return this.customerAddressesService.createForCustomer(customerId, dto);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Put('me/addresses/:id')
-  updateMyAddress(
-    @Req() req: any,
-    @Param('id') id: string,
-    @Body() dto: UpdateCustomerAddressDto,
-  ) {
-    const customerId = this.getCustomerIdFromReq(req);
-    console.log('PUT /customers/me/addresses/:id - Received customer_id:', customerId, 'Address ID:', id);
-    return this.customerAddressesService.updateForCustomer(customerId, +id, dto);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Put('me/addresses/:id')
+  // updateMyAddress(
+  //   @Req() req: any,
+  //   @Param('id') id: string,
+  //   @Body() dto: UpdateCustomerAddressDto,
+  // ) {
+  //   const customerId = this.getCustomerIdFromReq(req);
+  //   console.log('PUT /customers/me/addresses/:id - Received customer_id:', customerId, 'Address ID:', id);
+  //   return this.customerAddressesService.updateForCustomer(customerId, +id, dto);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete('me/addresses/:id')
-  deleteMyAddress(
-    @Req() req: any,
-    @Param('id') id: string,
-  ) {
-    const customerId = this.getCustomerIdFromReq(req);
-    console.log('DELETE /customers/me/addresses/:id - Received customer_id:', customerId, 'Address ID:', id);
-    return this.customerAddressesService.removeForCustomer(customerId, +id);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Delete('me/addresses/:id')
+  // deleteMyAddress(
+  //   @Req() req: any,
+  //   @Param('id') id: string,
+  // ) {
+  //   const customerId = this.getCustomerIdFromReq(req);
+  //   console.log('DELETE /customers/me/addresses/:id - Received customer_id:', customerId, 'Address ID:', id);
+  //   return this.customerAddressesService.removeForCustomer(customerId, +id);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Put('me/addresses/:id/default')
-  setMyDefaultAddress(
-    @Req() req: any,
-    @Param('id') id: string,
-  ) {
-    const customerId = this.getCustomerIdFromReq(req);
-    console.log('PUT /customers/me/addresses/:id/default - Received customer_id:', customerId, 'Address ID:', id);
-    return this.customerAddressesService.setDefaultForCustomer(customerId, +id);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Put('me/addresses/:id/default')
+  // setMyDefaultAddress(
+  //   @Req() req: any,
+  //   @Param('id') id: string,
+  // ) {
+  //   const customerId = this.getCustomerIdFromReq(req);
+  //   console.log('PUT /customers/me/addresses/:id/default - Received customer_id:', customerId, 'Address ID:', id);
+  //   return this.customerAddressesService.setDefaultForCustomer(customerId, +id);
+  // }
 
 
   @Post()

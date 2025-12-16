@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrdersGateway } from './orders.gateway';
 
 @Injectable()
 export class OrdersService {
@@ -15,6 +16,7 @@ export class OrdersService {
     private readonly orderRepository: Repository<Order>,
     @Inject(forwardRef(() => ShoppingCartService))
     private readonly shoppingCartService: ShoppingCartService,
+    private readonly ordersGateway: OrdersGateway,
   ) { }
 
   async getOrderSummary(customerId: number): Promise<OrderSummaryDto> {
@@ -89,6 +91,10 @@ export class OrdersService {
     }
 
     await this.shoppingCartService.clearByCustomerId(customerId);
+
+    // Emit WebSocket event for real-time updates
+    console.log('🚀 ATTEMPTING TO EMIT WEBSOCKET EVENT for order:', completeOrder.id);
+    this.ordersGateway.emitOrderCreated(completeOrder);
 
     return completeOrder;
   }

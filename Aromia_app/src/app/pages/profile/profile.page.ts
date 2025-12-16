@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ProfileService } from '../../services/profile.service';
 import { Customer } from '../../models/customer';
 import { StorageKey, StorageService } from 'src/app/services/storage.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'aromia-profile',
@@ -23,6 +24,7 @@ export class ProfilePage implements OnInit {
     phone: [''],
   });
 
+  version: any;
   constructor(
     private fb: FormBuilder,
     private profileService: ProfileService,
@@ -32,6 +34,7 @@ export class ProfilePage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.version = environment.baseUrl
     this.loadProfile();
   }
 
