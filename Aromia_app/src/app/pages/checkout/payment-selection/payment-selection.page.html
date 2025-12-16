@@ -8,9 +8,9 @@
   @if(paymentMethods) {
   <form [formGroup]="paymentForm">
     <ion-list>
-      <ion-radio-group formControlName="method" [value]="0">
+      <ion-radio-group formControlName="method">
         <ion-list-header><ion-label>Selecciona una opción</ion-label></ion-list-header>
-        @for (method of paymentMethods; track $index) {
+        @for (method of paymentMethods; track method.id) {
         <ion-item lines="none">
           <ion-radio mode="md" slot="start" [value]="method.id"></ion-radio>
           <ion-label>

@@ -2,7 +2,7 @@
   position: relative;
   z-index: 1000;
   background: var(--ion-background-color);
-  
+
   ion-searchbar {
     --background: var(--ion-color-light);
     --border-radius: 8px;
@@ -17,20 +17,34 @@
   right: 0;
   max-height: 300px;
   overflow-y: auto;
-  background: var(--ion-background-color); 
+  background: var(--ion-background-color);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1001;
   margin: 0 8px;
   border-radius: 8px;
-  
+
   ion-item {
     --padding-start: 16px;
     --inner-padding-end: 16px;
-    
+
     h3 {
       font-size: 14px;
       font-weight: 500;
       margin: 4px 0;
+    }
+  }
+}
+
+.favorites-button-container {
+  padding: 8px 16px;
+
+  ion-button {
+    --border-radius: 8px;
+    font-weight: 500;
+    text-transform: none;
+
+    ion-icon {
+      font-size: 20px;
     }
   }
 }
@@ -51,12 +65,12 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: block;
-  
+
   // Ensure Leaflet controls are visible
   .leaflet-control-container {
     z-index: 999;
   }
-  
+
   // Force Leaflet to use full container size
   .leaflet-container {
     height: 100%;
@@ -69,7 +83,7 @@
   bottom: 16px;
   right: 16px;
   z-index: 999;
-  
+
   ion-fab-button {
     color: #ffffff;
     --color: #ffffff;
@@ -81,36 +95,36 @@
 .address-card {
   margin: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  
+
   ion-card-header {
     padding-bottom: 8px;
   }
-  
+
   ion-card-title {
     font-size: 18px;
     font-weight: 600;
     color: var(--ion-color-primary);
   }
-  
+
   ion-card-content {
     padding-top: 0;
-    
+
     ion-item {
       --padding-start: 0;
       --inner-padding-end: 0;
     }
-    
+
     ion-icon {
       font-size: 24px;
       margin-right: 12px;
     }
-    
+
     p {
       margin: 4px 0;
       font-size: 14px;
       line-height: 1.4;
     }
-    
+
     .coordinates {
       font-size: 12px;
       color: var(--ion-color-medium);
@@ -121,7 +135,7 @@
 
 .button-container {
   padding: 16px;
-  
+
   ion-button {
     --border-radius: 8px;
     font-weight: 600;
@@ -135,7 +149,7 @@
 .custom-marker {
   background: transparent;
   border: none;
-  
+
   .marker-pin {
     width: 30px;
     height: 42px;
@@ -144,7 +158,7 @@
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-    
+
     &::after {
       content: '';
       width: 14px;
@@ -165,4 +179,3 @@
     height: 500px;
   }
 }
-

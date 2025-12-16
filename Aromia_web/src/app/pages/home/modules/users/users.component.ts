@@ -202,35 +202,36 @@ export class UsersComponent implements OnInit {
 
   confirmToggleStatus(user: any) {
     this.confirm.confirm({
-      message: `¿Seguro que deseas ${user.status ? 'inactivar' : 'activar'} este usuario?`,
+      message: `¿Seguro que deseas ${user.isActive ? 'inactivar' : 'activar'} este usuario?`,
       acceptLabel: 'Sí',
       rejectLabel: 'No',
       accept: () => {
         this.isLoading = true;
-        // this.api.users
-        //   .changeStatus({ 
-        //     user_id: user.user_id,
-        //     status: !user.status,
-        //   })
-        //   .subscribe({
-        //     next: () => {
-        //       this.isLoading = false;
-        //       this.toast.add({
-        //         severity: 'success',
-        //         summary: 'Estado actualizado',
-        //         detail: `${user.user} fue ${user.status ? 'inactivado' : 'activado'}`,
-        //       });
-        //       this.getUsers();
-        //     },
-        //     error: (err) => {
-        //       this.isLoading = false;
-        //       this.toast.add({
-        //         severity: 'error',
-        //         summary: 'Error',
-        //         detail: err.error?.message || 'No se pudo actualizar',
-        //       });
-        //     },
-        //   });
+        const newStatus = !user.isActive;
+
+        // Use id or user_id
+        const id = user.id || user.user_id;
+
+        this.api.patch(`${ENDPOINTS.ADMINS.GET_ALL}/${id}`, { isActive: newStatus })
+          .subscribe({
+            next: () => {
+              this.isLoading = false;
+              this.toast.add({
+                severity: 'success',
+                summary: 'Estado actualizado',
+                detail: `${user.firstName} ${user.lastName} fue ${newStatus ? 'activado' : 'inactivado'}`,
+              });
+              this.getUsers();
+            },
+            error: (err) => {
+              this.isLoading = false;
+              this.toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: err.error?.message || 'No se pudo actualizar',
+              });
+            },
+          });
       },
     });
   }
@@ -246,14 +247,14 @@ export class UsersComponent implements OnInit {
       this.userSelected = user;
 
       this.formUpdate = this.fb.group({
-        user_id: [this.userSelected.user_id, Validators.required],
-        name: [this.userSelected.name, Validators.required],
-        lastname: [this.userSelected.lastname, Validators.required],
+        id: [this.userSelected.id || this.userSelected.user_id, Validators.required],
+        firstName: [this.userSelected.firstName, Validators.required],
+        lastName: [this.userSelected.lastName, Validators.required],
         phone: [this.userSelected.phone, Validators.required],
-        position: [this.userSelected.position, Validators.required],
-        rol: [this.userSelected.rol, Validators.required],
-        color: [this.userSelected.color],
-        emailCompany: [this.userSelected.emailCompany],
+        // position: [this.userSelected.position, Validators.required], // Removed as not in interface/DTO
+        roleId: [this.userSelected.role, Validators.required], // Assuming role is populated or roleId is available
+        // color: [this.userSelected.color],
+        email: [this.userSelected.email],
       });
     }
   }
@@ -301,18 +302,32 @@ export class UsersComponent implements OnInit {
   }
 
 
+  statusFilter: 'all' | 'active' | 'inactive' = 'all';
+
   filterUser(ev: any) {
     console.log(ev)
-    if (this.search_user_text == '') {
-      this.usersFiltered = [...this.users]
-      return
+    let filtered = [...this.users];
+
+    if (this.statusFilter !== 'all') {
+      const isActive = this.statusFilter === 'active';
+      filtered = filtered.filter(u => u.isActive === isActive);
     }
 
-    this.usersFiltered = this.users.filter((u) =>
-      u.name == this.search_user_text ||
-      u.lastname == this.search_user_text ||
-      u.emailCompany == this.search_user_text
-    )
+    if (this.search_user_text && this.search_user_text.trim() !== '') {
+      const term = this.search_user_text.toLowerCase();
+      filtered = filtered.filter((u) =>
+        u.firstName?.toLowerCase().includes(term) ||
+        u.lastName?.toLowerCase().includes(term) ||
+        u.email.toLowerCase().includes(term)
+      );
+    }
+
+    this.usersFiltered = filtered;
+  }
+
+  onStatusFilterChange(status: 'all' | 'active' | 'inactive') {
+    this.statusFilter = status;
+    this.filterUser(null);
   }
 
 

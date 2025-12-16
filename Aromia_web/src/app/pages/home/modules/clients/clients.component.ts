@@ -25,6 +25,9 @@ export class ClientsComponent implements OnInit {
   private searchTermSubject = new BehaviorSubject<string>('');
   searchTerm = '';
 
+  statusFilter: 'all' | 'active' | 'inactive' = 'all';
+  private statusFilterSubject = new BehaviorSubject<'all' | 'active' | 'inactive'>('all');
+
   constructor(private api: ApiAromia) { }
 
   ngOnInit(): void {
@@ -54,20 +57,30 @@ export class ClientsComponent implements OnInit {
 
     this.filteredClients$ = combineLatest([
       this.clients$,
-      this.searchTermSubject
+      this.searchTermSubject,
+      this.statusFilterSubject
     ]).pipe(
-      map(([clients, searchTerm]) => {
-        if (!searchTerm.trim()) {
-          return clients;
+      map(([clients, searchTerm, statusFilter]) => {
+        let filtered = clients;
+
+        // Filter by status
+        if (statusFilter !== 'all') {
+          const isActive = statusFilter === 'active';
+          filtered = filtered.filter(client => client.isActive === isActive);
         }
 
-        const term = searchTerm.toLowerCase();
-        return clients.filter(client =>
-          client.firstName.toLowerCase().includes(term) ||
-          client.lastName.toLowerCase().includes(term) ||
-          client.email.toLowerCase().includes(term) ||
-          client.phone.toLowerCase().includes(term)
-        );
+        // Filter by search term
+        if (searchTerm.trim()) {
+          const term = searchTerm.toLowerCase();
+          filtered = filtered.filter(client =>
+            client.firstName.toLowerCase().includes(term) ||
+            client.lastName.toLowerCase().includes(term) ||
+            client.email.toLowerCase().includes(term) ||
+            client.phone.toLowerCase().includes(term)
+          );
+        }
+
+        return filtered;
       })
     );
   }
@@ -78,6 +91,29 @@ export class ClientsComponent implements OnInit {
 
   onSearchChange(term: string) {
     this.searchTermSubject.next(term);
+  }
+
+  onStatusFilterChange(status: 'all' | 'active' | 'inactive') {
+    this.statusFilter = status;
+    this.statusFilterSubject.next(status);
+  }
+
+  toggleStatus(client: Customer) {
+    const newStatus = !client.isActive;
+    // Optimistic update
+    client.isActive = newStatus;
+
+    this.api.patch(`${ENDPOINTS.CLIENTS.GET_ALL}/${client.id}`, { isActive: newStatus }).subscribe({
+      next: () => {
+        console.log(`Client ${client.id} status updated to ${newStatus}`);
+      },
+      error: (err) => {
+        console.error('Error updating client status:', err);
+        // Revert on error
+        client.isActive = !newStatus;
+        // Optionally show an error message toast here
+      }
+    });
   }
 
   formatDate(date: Date | string): string {
@@ -92,5 +128,7 @@ export class ClientsComponent implements OnInit {
   clearSearch() {
     this.searchTerm = '';
     this.searchTermSubject.next('');
+    this.statusFilter = 'all';
+    this.statusFilterSubject.next('all');
   }
 }

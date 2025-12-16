@@ -28,6 +28,8 @@ export interface CustomerAddress {
     postalCode?: string;
     country: string;
     additionalInfo?: string;
+    latitude?: number;
+    longitude?: number;
     isDefault: boolean;
     createdAt: Date;
     updatedAt: Date;

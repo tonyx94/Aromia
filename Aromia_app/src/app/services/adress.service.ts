@@ -19,14 +19,13 @@ export class AddressService {
   addAddress(customerId: number, data: Address): Observable<Address> {
     console.log('AddressService.addAddress - customerId:', customerId);
     console.log('AddressService.addAddress - data:', data);
-    const payload = { ...data, customer_id: customerId };
-    console.log('AddressService.addAddress - payload:', payload);
-    return this.api.post<Address>(this.baseEndpoint, payload);
+    // Don't send customer_id in payload - the endpoint /customers/me/addresses already knows the customer
+    return this.api.post<Address>(this.baseEndpoint, data);
   }
 
   updateAddress(customerId: number, id: number, data: Partial<Address>): Observable<Address> {
     console.log('AddressService.updateAddress - customerId:', customerId, 'id:', id);
-    return this.api.put<Address>(`${this.baseEndpoint}/${id}`, { ...data, customer_id: customerId });
+    return this.api.put<Address>(`${this.baseEndpoint}/${id}`, data);
   }
 
   deleteAddress(customerId: number, id: number): Observable<void> {
@@ -36,8 +35,7 @@ export class AddressService {
 
   setDefault(customerId: number, id: number): Observable<Address> {
     console.log('AddressService.setDefault - customerId:', customerId, 'id:', id);
-    const payload = { customer_id: customerId };
-    console.log('AddressService.setDefault - payload:', payload);
-    return this.api.put<Address>(`${this.baseEndpoint}/${id}/default`, payload);
+    // Don't send customer_id in payload - the endpoint already knows the customer
+    return this.api.put<Address>(`${this.baseEndpoint}/${id}/default`, {});
   }
 }

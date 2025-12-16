@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonThumbnail, IonSearchbar, IonModal, IonButtons, IonButton, IonIcon, IonBadge, IonFooter, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonThumbnail, IonSearchbar, IonModal, IonButtons, IonButton, IonIcon, IonBadge, IonFooter, ToastController, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { AromiaApi } from 'src/app/services/request';
 import { Router } from '@angular/router';
 
@@ -20,7 +20,7 @@ import { StorageService, StorageKey } from '../../services/storage.service';
   templateUrl: './products.page.html',
   styleUrls: ['./products.page.scss'],
   standalone: true,
-  imports: [IonFooter, IonBadge, IonIcon, IonButton, IonModal, IonSearchbar, IonItem, IonList, IonContent, IonHeader, CommonModule, FormsModule, AromiaHeaderComponent, IonThumbnail, IonToolbar, IonButtons, AromiaCartComponent]
+  imports: [IonFooter, IonBadge, IonIcon, IonButton, IonModal, IonSearchbar, IonItem, IonList, IonContent, IonHeader, CommonModule, FormsModule, AromiaHeaderComponent, IonThumbnail, IonToolbar, IonButtons, AromiaCartComponent, IonRefresher, IonRefresherContent]
 })
 export class ProductsPage implements OnInit {
 
@@ -46,7 +46,7 @@ export class ProductsPage implements OnInit {
   }
 
   getProducts() {
-    this.api.get<Product[]>(ENDPOINTS.PRODUCTS.GET_ALL).subscribe((products) => {
+    this.api.get<Product[]>(ENDPOINTS.PRODUCTS.GET_ACTIVE).subscribe((products) => {
       products.forEach((product: Product) => product.cant = 0);
       console.log('Productos obtenidos:', products);
       this.products = [...products];
@@ -121,6 +121,11 @@ export class ProductsPage implements OnInit {
     })
   }
 
+  openCart() {
+    this.setOpenProductDetail(false)
+    this.setOpenCart(true)
+  }
+
   //AR-47
   async setMessage(message: string, color: 'success' | 'danger' | 'warning') {
     const toast = await this.toastController.create({
@@ -131,5 +136,12 @@ export class ProductsPage implements OnInit {
     });
 
     await toast.present();
+  }
+
+  handleRefresh(event: any) {
+    this.getProducts();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 }

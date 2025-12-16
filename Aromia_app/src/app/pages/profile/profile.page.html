@@ -29,5 +29,11 @@
     <ion-button expand="block" type="submit" [disabled]="form.invalid || loading" class="ion-margin-top">
       {{ loading ? 'Guardando...' : 'Guardar cambios' }}
     </ion-button>
+    <hr>
+
+    <ion-button expand="block" color="danger" fill="outline" class="ion-margin-top" (click)="onLogout()">
+      Cerrar sesión
+      <ion-icon name="log-out-outline" slot="end"></ion-icon>
+    </ion-button>
   </form>
 </ion-content>

@@ -1,0 +1,35 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Mis Lugares Favoritos</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="close()">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="modal-content">
+        <div *ngIf="addresses.length === 0" class="empty-state">
+            <ion-icon name="location" color="medium"></ion-icon>
+            <p>No tienes direcciones guardadas aún</p>
+        </div>
+
+        <ion-list *ngIf="addresses.length > 0">
+            <ion-item *ngFor="let address of addresses" button (click)="selectAddress(address)" detail="true">
+                <ion-icon slot="start" [name]="address.isDefault ? 'heart' : 'location'"
+                    [color]="address.isDefault ? 'danger' : 'primary'">
+                </ion-icon>
+                <ion-label>
+                    <h2>
+                        {{ address.alias }}
+                        <ion-badge *ngIf="address.isDefault" color="danger">Favorita</ion-badge>
+                    </h2>
+                    <p>{{ address.streetAddress }}</p>
+                    <p class="address-details">{{ address.city }}, {{ address.state }}</p>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </div>
+</ion-content>

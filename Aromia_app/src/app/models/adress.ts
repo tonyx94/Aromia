@@ -8,4 +8,7 @@ export interface Address {
   country?: string;
   additionalInfo?: string;
   isDefault?: boolean;
+  latitude?: number;
+  longitude?: number;
+  customer_id?: number;
 }

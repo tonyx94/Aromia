@@ -1,32 +1,30 @@
 <div class="p-18">
     <div class="card">
         <p-toast />
-        <p-toolbar class="mb-6">
-            <ng-template #start>
-                <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="openNew()" />
-                <p-button severity="danger" label="Eliminar" icon="pi pi-trash" outlined
-                    (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
-            </ng-template>
 
-            <ng-template #end>
-                <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Importar" chooseLabel="Import"
-                    auto customUpload class="mr-2 inline-block" [chooseButtonProps]="{ severity: 'secondary' }" />
-                <p-button label="Exportar" icon="pi pi-upload" severity="secondary" (onClick)="exportCSV($event)" />
-            </ng-template>
-        </p-toolbar>
 
         <p-table #dt [value]="products" [rows]="10" [columns]="cols" [paginator]="true"
             [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-             [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
+            [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
             currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} productos"
             [showCurrentPageReport]="true">
             <ng-template #caption>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-4">
                     <h5 class="m-0">Productos</h5>
-                    <p-iconfield>
-                        <p-inputicon class="pi pi-search" />
-                        <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar..." />
-                    </p-iconfield>
+
+                    <div class="flex gap-4 ml-auto">
+                        <p-dropdown
+                            [options]="[{label: 'Todos', value: 'all'}, {label: 'Activos', value: 'active'}, {label: 'Inactivos', value: 'inactive'}]"
+                            [(ngModel)]="statusFilter" (onChange)="onStatusFilterChange($event.value)"
+                            placeholder="Filtrar por estado" class="w-48">
+                        </p-dropdown>
+
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-search" />
+                            <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar..." />
+                        </p-iconfield>
+                        <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" (onClick)="openNew()" />
+                    </div>
                 </div>
             </ng-template>
             <ng-template #header>
@@ -35,14 +33,14 @@
                         <p-tableHeaderCheckbox />
                     </th>
                     <th>Imagen</th>
-                    <th pSortableColumn="name" >
+                    <th pSortableColumn="name">
                         <div class="flex items-center gap-2">
                             Nombre
                             <p-sortIcon field="name" />
                         </div>
                     </th>
-                    
-                    <th pSortableColumn="price" >
+
+                    <th pSortableColumn="price">
                         <div class="flex items-center gap-2">
                             Precio
                             <p-sortIcon field="price" />
@@ -50,37 +48,51 @@
                     </th>
                     <th pSortableColumn="rating">
                         <div class="flex items-center gap-2">
-                           En Stock
+                            En Stock
                         </div>
                     </th>
                     <th pSortableColumn="inventoryStatus">
                         <div class="flex items-center gap-2">
-                            Status
+                            Inventario
                             <p-sortIcon field="inventoryStatus" />
+                        </div>
+                    </th>
+                    <th pSortableColumn="is_active">
+                        <div class="flex items-center gap-2">
+                            Estado
+                            <p-sortIcon field="is_active" />
                         </div>
                     </th>
                 </tr>
             </ng-template>
             <ng-template #body let-product>
                 <tr>
-                    
+
                     <td style="width: 3rem">
                         <p-tableCheckbox [value]="product" />
                     </td>
 
                     <td>
-                        <img [src]="product.image_url"
-                            [alt]="product.name" style="height: 64px; width: 64px; object-fit: cover;" class="rounded" />
+                        <img [src]="product.image_url" [alt]="product.name"
+                            style="height: 64px; width: 64px; object-fit: cover;" class="rounded" />
                     </td>
 
                     <td>{{ product.name }}</td>
-                    
+
                     <td>{{ product.price | currency: '₡' }}</td>
                     <td>
                         {{ product.stock_quantity }}
                     </td>
                     <td>
-                        <p-tag [value]="product.stock_quantity > 0? 'Activo':'Inactivo'" [severity]="getSeverity(product.stock_quantity)" />
+                        <p-tag [value]="product.stock_quantity > 0? 'En Stock':'Sin Stock'"
+                            [severity]="getSeverity(product.stock_quantity)" />
+                    </td>
+                    <td>
+                        <p-tag [value]="product.is_active ? 'Activo' : 'Inactivo'"
+                            [severity]="product.is_active ? 'success' : 'danger'" (click)="toggleStatus(product)"
+                            [ngStyle]="{'cursor': 'pointer'}"
+                            pTooltip="Click para {{ product.is_active ? 'desactivar' : 'activar' }}"
+                            tooltipPosition="top" />
                     </td>
                 </tr>
             </ng-template>
@@ -147,7 +159,7 @@
                 </form>
             </ng-template>
 
-            
+
         </p-dialog>
 
         <p-confirmDialog [style]="{ width: '450px' }" />

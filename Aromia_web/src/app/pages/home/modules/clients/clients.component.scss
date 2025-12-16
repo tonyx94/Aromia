@@ -122,6 +122,9 @@
         margin-bottom: 1.5rem;
 
         .filter-group {
+            display: flex;
+            gap: 1rem;
+
             .search-input {
                 width: 100%;
                 padding: 0.75rem;
@@ -140,6 +143,28 @@
 
                 &::placeholder {
                     color: #666;
+                }
+            }
+
+            .status-select {
+                padding: 0.75rem;
+                background: #1a1a1a00;
+                border: 1px solid #333;
+                border-radius: 8px;
+                color: #ffffff;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:focus {
+                    outline: none;
+                    border-color: #a8ff35;
+                    box-shadow: 0 0 0 3px rgba(168, 255, 53, 0.1);
+                }
+
+                option {
+                    background: #18181B;
+                    color: #ffffff;
                 }
             }
         }
@@ -198,6 +223,45 @@
                     font-weight: 700;
                     margin: 0;
                     color: #ffffff;
+                }
+
+                .status-actions {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+
+                .toggle-btn {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    border: 1px solid #333;
+                    background: transparent;
+                    color: #666;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.1);
+                        color: #fff;
+                    }
+
+                    &.active {
+                        background: rgba(168, 255, 53, 0.1);
+                        color: #a8ff35;
+                        border-color: #a8ff35;
+
+                        &:hover {
+                            background: rgba(168, 255, 53, 0.2);
+                        }
+                    }
+
+                    i {
+                        font-size: 0.8rem;
+                    }
                 }
 
                 .status-badge {
@@ -299,6 +363,38 @@
                 color: #999;
                 margin: 0;
                 font-size: 0.95rem;
+            }
+
+            .header-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .toggle-btn.large {
+                padding: 0.625rem 1.25rem;
+                border-radius: 24px;
+                font-size: 0.875rem;
+                font-weight: 600;
+                background: transparent;
+                border: 1px solid #333;
+                color: #fff;
+                cursor: pointer;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
+
+                &.active {
+                    background: rgba(168, 255, 53, 0.1);
+                    color: #a8ff35;
+                    border-color: #a8ff35;
+
+                    &:hover {
+                        background: rgba(168, 255, 53, 0.2);
+                    }
+                }
             }
 
             .status-badge-large {

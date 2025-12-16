@@ -24,6 +24,14 @@
                     <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)"
                         placeholder="Buscar por nombre, email o teléfono..." class="search-input" />
                 </div>
+                <div class="filter-group">
+                    <select [ngModel]="statusFilter" (ngModelChange)="onStatusFilterChange($event)"
+                        class="status-select">
+                        <option value="all">Todos</option>
+                        <option value="active">Activos</option>
+                        <option value="inactive">Inactivos</option>
+                    </select>
+                </div>
             </div>
 
             <div class="clients-list">
@@ -31,9 +39,17 @@
                     [class.selected]="selectedClient?.id === client.id" (click)="selectClient(client)">
                     <div class="client-card-header">
                         <h3>{{ client.firstName }} {{ client.lastName }}</h3>
-                        <span class="status-badge" [class.inactive]="!client.isActive">
-                            {{ client.isActive ? 'Activo' : 'Inactivo' }}
-                        </span>
+                        <div class="status-actions">
+                            <span class="status-badge" [class.inactive]="!client.isActive">
+                                {{ client.isActive ? 'Activo' : 'Inactivo' }}
+                            </span>
+                            <!-- <button class="toggle-btn" [class.active]="client.isActive"
+                                (click)="$event.stopPropagation(); toggleStatus(client)"
+                                title="{{ client.isActive ? 'Desactivar' : 'Activar' }}">
+                                <i class="pi" [class.pi-check]="client.isActive"
+                                    [class.pi-times]="!client.isActive"></i>
+                            </button> -->
+                        </div>
                     </div>
                     <div class="client-card-body">
                         <p class="client-email">
@@ -70,9 +86,15 @@
                         <h2>{{ selectedClient.firstName }} {{ selectedClient.lastName }}</h2>
                         <p class="client-id">ID: {{ selectedClient.id }}</p>
                     </div>
-                    <span class="status-badge-large" [class.inactive]="!selectedClient.isActive">
-                        {{ selectedClient.isActive ? 'Activo' : 'Inactivo' }}
-                    </span>
+                    <div class="header-actions">
+                        <!-- <span class="status-badge-large" [class.inactive]="!selectedClient.isActive">
+                            {{ selectedClient.isActive ? 'Activo' : 'Inactivo' }}
+                        </span> -->
+                        <button class="toggle-btn large" [class.active]="selectedClient.isActive"
+                            (click)="toggleStatus(selectedClient)">
+                            {{ selectedClient.isActive ? 'Desactivar' : 'Activar' }}
+                        </button>
+                    </div>
                 </div>
 
                 <div class="details-section">

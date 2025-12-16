@@ -3,13 +3,13 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
- 
-@ApiTags('Products')   
-@Controller('products')      
-export class ProductsController { 
-  constructor(private readonly productsService: ProductsService) {}
 
-  @Post() 
+@ApiTags('Products')
+@Controller('products')
+export class ProductsController {
+  constructor(private readonly productsService: ProductsService) { }
+
+  @Post()
   @ApiOperation({ summary: 'Crear un nuevo producto' })
   @ApiResponse({ status: 201, description: 'Producto creado correctamente' })
   create(@Body() dto: CreateProductDto) {
@@ -19,10 +19,17 @@ export class ProductsController {
   @Get()
   @ApiOperation({ summary: 'Listar todos los productos' })
   @ApiResponse({ status: 200, description: 'Lista de productos obtenida correctamente' })
-  findAll() { 
+  findAll() {
     return this.productsService.findAll();
   }
- 
+
+  @Get('active')
+  @ApiOperation({ summary: 'Listar todos los productos activos' })
+  @ApiResponse({ status: 200, description: 'Lista de productos activos obtenida correctamente' })
+  findAllActive() {
+    return this.productsService.findAllActive();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtener un producto por ID' })
   @ApiResponse({ status: 200, description: 'Producto encontrado' })

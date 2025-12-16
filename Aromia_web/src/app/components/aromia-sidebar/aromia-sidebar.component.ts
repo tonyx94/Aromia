@@ -39,28 +39,53 @@ export class AromiaSidebarComponent implements OnInit {
 
   user!: IUser
 
-  ngOnInit(): void {
-    this.local.get<IUser>(StorageKey.User).then((u) => {
-      if (!u) return
-      this.user = u
-
-      // this.user.rol.map((b) => b.toLowerCase())
-      // this.activateButtons()
-    })
-
-
+  async ngOnInit(): Promise<void> {
+    const u = await this.local.get<IUser>(StorageKey.User);
+    if (!u) return;
+    this.user = u;
+    await this.activateButtons();
   }
 
-  activateButtons() {
-    this.buttons.map((b) =>
-      this.user.rol.includes(b.name) ? b.active = true : b.active = false
-    )
+  async activateButtons() {
+    const isOperativo = this.user.role?.name?.toLowerCase() === 'operativo';
+
+    console.log('User role:', this.user.role);
+    console.log('Is operativo?', isOperativo);
+
+    if (isOperativo) {
+      this.buttons.map((b) =>
+        b.reference === 'pedidos' ? b.active = true : b.active = false
+      )
+    } else {
+      this.buttons.map((b) => b.active = true)
+    }
 
     const buttons = [...this.buttons]
-
     const btnActive = buttons.filter((b) => b.active)
 
+    console.log('Active buttons:', btnActive.map(b => b.name));
+
+    // Check if there's a saved module in storage
+    const savedModule = await this.local.get<string>(StorageKey.CurrentModule);
+    console.log('Saved module:', savedModule);
+
+    if (savedModule) {
+      // Try to find the saved module in active buttons
+      const savedButton = btnActive.find((b) => b.navigate === savedModule);
+      if (savedButton) {
+        // Navigate to the saved module if it's still active for this user
+        console.log('Navigating to saved module:', savedButton.name);
+        this.navigate(savedButton);
+        return;
+      } else {
+        console.log('Saved module not active for this user, clearing it');
+        await this.local.remove(StorageKey.CurrentModule);
+      }
+    }
+
+    // If no saved module or it's not active, navigate to first active button
     if (btnActive[0]) {
+      console.log('Navigating to first active button:', btnActive[0].name);
       this.navigate(btnActive[0]);
     }
   }

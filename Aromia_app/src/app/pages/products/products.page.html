@@ -9,6 +9,10 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-list class="p-26">
     @for (product of productsFiltered; track $index) {
     <ion-item (click)="setOpenProductDetail(true, product)" class="p-4 product" lines="none" [button]="true"
@@ -70,7 +74,7 @@
     </ion-content>
     @if(productSelected.cant > 0) {
     <ion-footer mode="ios">
-      <ion-button (click)="addCart()" mode="ios" expand="block">Ir al carrito ({{ productSelected.price *
+      <ion-button (click)="openCart()" mode="ios" expand="block">Ir al carrito ({{ productSelected.price *
         productSelected.cant | currency: '₡' }})</ion-button>
     </ion-footer>
     }

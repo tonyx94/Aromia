@@ -99,10 +99,11 @@ export class LoginComponent implements OnInit {
     this.api.post(ENDPOINTS.AUTH.LOGIN, { email, password, userType }).subscribe({
       next: (response) => {
         console.log(response);
-        this.route.navigateByUrl('/home');
         if (response && response.access_token) {
           this.local.set(StorageKey.Token, response.access_token);
           this.local.set(StorageKey.User, response.user);
+          // Clear any previously saved module to ensure fresh navigation
+          this.local.remove(StorageKey.CurrentModule);
           this.message(`Bienvenido ${response.user.name}`, 'success', "Ingreso Exitoso!");
 
           setTimeout(() => {

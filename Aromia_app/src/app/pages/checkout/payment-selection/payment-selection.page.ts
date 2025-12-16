@@ -17,7 +17,7 @@ import { CheckoutStateService } from 'src/app/services/checkout-state.service';
   imports: [IonicModule, CommonModule, ReactiveFormsModule, RouterModule]
 })
 export class PaymentSelectionPage implements OnInit, OnDestroy {
-  paymentMethods: { id: number, name: string, description: string, selected: boolean }[] = [];
+  paymentMethods: { id: number, name: string, description: string }[] = [];
   paymentForm: FormGroup;
   private formSubscription!: Subscription;
 
@@ -26,13 +26,16 @@ export class PaymentSelectionPage implements OnInit, OnDestroy {
     private checkoutState: CheckoutStateService,
     private fb: FormBuilder,
     private router: Router
-  ) { this.paymentForm = this.fb.group({ method: [null, Validators.required] }); }
+  ) {
+    // Inicializa el formulario con "Efectivo" (id: 0) como método de pago predeterminado
+    this.paymentForm = this.fb.group({ method: [0, Validators.required] });
+  }
 
   ngOnInit(): void {
     this.paymentMethods = [
-      { id: 0, name: "Efectivo", description: 'Dinero en formato físico para uso inmediato.', selected: true },
-      { id: 1, name: "Sinpe movil", description: 'Es un servicio para realizar transferencias. ', selected: true },
-    ]
+      { id: 0, name: "Efectivo", description: 'Dinero en formato físico para uso inmediato.' },
+      { id: 1, name: "Sinpe móvil", description: 'Es un servicio para realizar transferencias.' },
+    ];
   }
 
   proceedToConfirmation(): void { if (this.paymentForm.valid) { this.router.navigate(['/checkout/confirmation']); } }

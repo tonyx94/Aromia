@@ -28,6 +28,12 @@ export class CustomerAddress {
   @Column({ name: 'additional_info', type: 'text', nullable: true, charset: 'utf8mb4', collation: 'utf8mb4_unicode_ci' })
   additionalInfo?: string;
 
+  @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
+  latitude?: number;
+
+  @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
+  longitude?: number;
+
   @Column({ name: 'is_default', default: false })
   isDefault: boolean;
 

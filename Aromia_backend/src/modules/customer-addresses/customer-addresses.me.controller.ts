@@ -7,6 +7,7 @@ import {
   Put,
   Post,
   Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CustomerAddressesService } from './customer-addresses.service';
@@ -19,7 +20,8 @@ export class CustomerAddressesMeController {
   constructor(private readonly service: CustomerAddressesService) { }
 
   @Get()
-  findAll(@Query('customer_id') customerId: number) {
+  findAll(@Query('customer_id', ParseIntPipe) customerId: number) {
+    console.log('GET /customers/me/addresses - Received customer_id:', customerId, 'Type:', typeof customerId);
     return this.service.findAllByCustomer(customerId);
   }
 

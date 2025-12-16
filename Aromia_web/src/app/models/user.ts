@@ -1,15 +1,18 @@
 export interface IUser {
-  color: string;
-  date_created: string;
-  emailCompany: string;
-  lastname: string;
-  name: string;
+  id?: number;
+  user_id?: string;
+  firstName?: string;
+  lastName?: string;
+  lastname?: string;
+  name?: string;
+  email: string;
   phone: string;
-  position: string;
-  rol: string[];
-  status: true;
-  user: string;
-  user_id: string;
+  roleId: number;
+  role?: any;
+  isActive: boolean;
+
+  color?: string;
+  position?: string;
 }
 
 export interface IClient {

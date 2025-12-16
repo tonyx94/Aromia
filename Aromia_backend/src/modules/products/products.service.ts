@@ -21,6 +21,12 @@ export class ProductsService {
     return await this.productRepository.find();
   }
 
+  async findAllActive(): Promise<Product[]> {
+    return await this.productRepository.find({
+      where: { is_active: true }
+    });
+  }
+
   async findOne(id: number): Promise<Product> {
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product) throw new NotFoundException(`Producto con ID ${id} no encontrado`);

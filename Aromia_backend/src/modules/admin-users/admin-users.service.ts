@@ -14,7 +14,7 @@ export class AdminUsersService {
     private readonly adminUserRepository: Repository<AdminUser>,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
-  ) {}
+  ) { }
 
   async create(createAdminUserDto: CreateAdminUserDto) {
     const role = await this.roleRepository.findOne({ where: { id: createAdminUserDto.roleId } });
@@ -32,7 +32,7 @@ export class AdminUsersService {
   }
 
   findAll() {
-    return this.adminUserRepository.find();
+    return this.adminUserRepository.find({ relations: ['role'] });
   }
 
   async findOne(id: number) {
@@ -71,4 +71,3 @@ export class AdminUsersService {
     return this.adminUserRepository.remove(adminUser);
   }
 }
- 

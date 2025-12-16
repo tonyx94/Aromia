@@ -22,7 +22,8 @@ import {
   IonIcon,
   AlertController,
   LoadingController,
-  ToastController
+  ToastController,
+  ModalController
 } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
@@ -36,6 +37,7 @@ import { AromiaApi } from 'src/app/services/request';
 import { ENDPOINTS } from 'src/environments/endpoints';
 import { StorageKey, StorageService } from 'src/app/services/storage.service';
 import { Customer } from 'src/app/models/customer';
+import { FavoritesModalComponent } from './favorites-modal/favorites-modal.component';
 
 // Leaflet will use default marker icons from CDN
 
@@ -88,6 +90,9 @@ export class ConfirmationPage implements OnInit {
     state: 'San José',
     country: 'Costa Rica'
   };
+  savedAddresses: Address[] = [];
+  showSavedAddresses: boolean = true;
+  selectedSavedAddress: Address | null = null;
 
   user!: Customer
 
@@ -96,6 +101,7 @@ export class ConfirmationPage implements OnInit {
     private alertController: AlertController,
     private loadingController: LoadingController,
     private toastController: ToastController,
+    private modalController: ModalController,
     private addressService: AddressService,
     private ordersService: OrdersService,
     private api: AromiaApi,
@@ -106,6 +112,7 @@ export class ConfirmationPage implements OnInit {
 
   ngOnInit() {
     this.getUserData();
+    this.loadSavedAddresses();
   }
 
   ionViewDidEnter() {
@@ -115,15 +122,104 @@ export class ConfirmationPage implements OnInit {
   getUserData() {
     this.local.get<Customer>(StorageKey.User).then((user) => {
       if (user) {
-        this.user = user
+        this.user = user;
+        console.log('getUserData - User loaded:', this.user.id);
+      }
+    });
+  }
+
+  async loadSavedAddresses() {
+    try {
+      // Wait for user to be loaded
+      const user = await this.local.get<Customer>(StorageKey.User);
+      if (!user || !user.id) {
+        console.warn('loadSavedAddresses - No user found');
+        return;
       }
 
-    })
+      console.log('loadSavedAddresses - Loading addresses for user:', user.id);
+      this.savedAddresses = await this.addressService.getAddresses(user.id).toPromise() || [];
+      console.log('loadSavedAddresses - Loaded addresses:', this.savedAddresses.length);
+    } catch (error) {
+      console.error('Error loading saved addresses:', error);
+      this.savedAddresses = [];
+    }
+  }
+
+  selectSavedAddress(address: Address) {
+    console.log('selectSavedAddress - Selected address:', address);
+    this.selectedSavedAddress = address;
+    this.savedAddressId = address.id || null;
+    this.selectedAddress = address.streetAddress;
+    this.isFavorite = address.isDefault || false;
+
+    // Update map if coordinates are available
+    if (address.latitude && address.longitude) {
+      this.selectedCoordinates = { lat: address.latitude, lng: address.longitude };
+      this.map.setView([address.latitude, address.longitude], 16);
+      this.marker.setLatLng([address.latitude, address.longitude]);
+    }
+
+    // Update address details
+    this.addressDetails = {
+      city: address.city,
+      state: address.state,
+      country: address.country || 'Costa Rica'
+    };
+  }
+
+  isDuplicateAddress(newAddress: Address): boolean {
+    // Check if an address with similar coordinates already exists
+    const COORDINATE_THRESHOLD = 0.0001; // ~11 meters
+
+    return this.savedAddresses.some(addr => {
+      if (!addr.latitude || !addr.longitude || !newAddress.latitude || !newAddress.longitude) {
+        return false;
+      }
+
+      const latDiff = Math.abs(addr.latitude - newAddress.latitude);
+      const lngDiff = Math.abs(addr.longitude - newAddress.longitude);
+
+      return latDiff < COORDINATE_THRESHOLD && lngDiff < COORDINATE_THRESHOLD;
+    });
+  }
+
+  findExistingAddress(): Address | null {
+    const COORDINATE_THRESHOLD = 0.0001; // ~11 meters
+
+    return this.savedAddresses.find(addr => {
+      if (!addr.latitude || !addr.longitude) {
+        return false;
+      }
+
+      const latDiff = Math.abs(addr.latitude - this.selectedCoordinates.lat);
+      const lngDiff = Math.abs(addr.longitude - this.selectedCoordinates.lng);
+
+      return latDiff < COORDINATE_THRESHOLD && lngDiff < COORDINATE_THRESHOLD;
+    }) || null;
   }
 
   ionViewWillLeave() {
     if (this.map) {
       this.map.remove();
+    }
+  }
+
+  async openFavoritesModal() {
+    const modal = await this.modalController.create({
+      component: FavoritesModalComponent,
+      componentProps: {
+        addresses: this.savedAddresses
+      },
+      breakpoints: [0, 0.5, 0.75, 1],
+      initialBreakpoint: 0.75
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data && data.selectedAddress) {
+      this.selectSavedAddress(data.selectedAddress);
     }
   }
 
@@ -314,6 +410,54 @@ export class ConfirmationPage implements OnInit {
 
     console.log('addFavoriteDirection - User ID:', this.user.id);
 
+    // Check for duplicate before saving
+    const existingAddress = this.findExistingAddress();
+    if (existingAddress) {
+      const alert = await this.alertController.create({
+        header: 'Dirección Existente',
+        message: `Esta ubicación ya está guardada como "${existingAddress.alias}". ¿Deseas marcarla como favorita?`,
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel'
+          },
+          {
+            text: 'Marcar como Favorita',
+            handler: async () => {
+              if (existingAddress.id) {
+                const loading = await this.loadingController.create({
+                  message: 'Actualizando dirección favorita...'
+                });
+                await loading.present();
+
+                try {
+                  await this.addressService.setDefault(this.user.id, existingAddress.id).toPromise();
+                  this.savedAddressId = existingAddress.id;
+                  this.isFavorite = true;
+                  await this.loadSavedAddresses();
+
+                  await loading.dismiss();
+
+                  const toast = await this.toastController.create({
+                    message: '¡Dirección marcada como favorita!',
+                    duration: 2000,
+                    color: 'success',
+                    icon: 'heart'
+                  });
+                  await toast.present();
+                } catch (error) {
+                  await loading.dismiss();
+                  console.error('Error setting favorite:', error);
+                }
+              }
+            }
+          }
+        ]
+      });
+      await alert.present();
+      return;
+    }
+
     const loading = await this.loadingController.create({
       message: 'Guardando dirección favorita...'
     });
@@ -328,6 +472,7 @@ export class ConfirmationPage implements OnInit {
         console.log('Setting default - User ID:', this.user.id, 'Address ID:', this.savedAddressId);
         await this.addressService.setDefault(this.user.id, this.savedAddressId).toPromise();
         this.isFavorite = true;
+        await this.loadSavedAddresses();
 
         await loading.dismiss();
 
@@ -482,6 +627,15 @@ export class ConfirmationPage implements OnInit {
       throw new Error('Usuario no identificado');
     }
 
+    // Check if address already exists
+    const existingAddress = this.findExistingAddress();
+    if (existingAddress) {
+      console.log('saveAddressIfNeeded - Using existing address:', existingAddress.id);
+      this.savedAddressId = existingAddress.id || null;
+      return;
+    }
+
+    // Prepare address data WITHOUT latitude/longitude/customer_id (backend doesn't accept them)
     const addressData: Address = {
       alias: 'Dirección de entrega',
       streetAddress: this.selectedAddress,
@@ -498,6 +652,9 @@ export class ConfirmationPage implements OnInit {
     const savedAddress = await this.addressService.addAddress(this.user.id, addressData).toPromise();
     console.log('saveAddressIfNeeded - Saved Address:', savedAddress);
     this.savedAddressId = savedAddress?.id || null;
+
+    // Reload saved addresses list
+    await this.loadSavedAddresses();
   }
 
 

@@ -12,6 +12,7 @@ export const ENDPOINTS = {
   },
   PRODUCTS: {
     GET_ALL: 'products',
+    GET_ACTIVE: 'products/active',
     GET_BY_ID: (id: string) => `products/${id}`,
     CREATE: 'products',
     UPDATE: (id: string) => `products/${id}`,

@@ -20,7 +20,7 @@ import { ApiAromia } from '../../services/api.service';
 })
 export class SplashscreenComponent implements OnInit {
 
-   private local = inject(StorageService);
+  private local = inject(StorageService);
   version: any
 
   constructor(
@@ -28,37 +28,37 @@ export class SplashscreenComponent implements OnInit {
     private messageService: MessageService,
     private route: Router
 
-  ) {}
- 
+  ) { }
+
   ngOnInit() {
     this.version = environment.version
 
     this.local.get<IUser>(StorageKey.User).then(user => {
       if (user) {
-        this.message(`Bienvenido ${user.name}`, 'success', "Ingreso Exitoso!")
+        this.message(`Bienvenido ${user.firstName}`, 'success', "Ingreso Exitoso!")
         setTimeout(() => {
           this.route.navigateByUrl('/home')
         }, 2000);
-        
+
       }
     });
   }
 
   message(message: string, status: 'error' | 'success' | 'info' | 'warning', title?: string, duration?: number) {
-      const summary = 
-        status == 'error'? 'Algo salió mal' :
-        status == 'success'? 'Operación exitosa!' :
-        status == 'warning'? 'Cuidado con esto':
-        status == 'info'? 'Ten presente lo siguiente' : ""
-  
-      const options: ToastMessageOptions = {}
-  
-      this.messageService.add({
-        severity: status,
-        summary: title || summary.toLocaleUpperCase(),
-        text: message,
-        detail: message,
-        life: 5000
-      });
-    }
+    const summary =
+      status == 'error' ? 'Algo salió mal' :
+        status == 'success' ? 'Operación exitosa!' :
+          status == 'warning' ? 'Cuidado con esto' :
+            status == 'info' ? 'Ten presente lo siguiente' : ""
+
+    const options: ToastMessageOptions = {}
+
+    this.messageService.add({
+      severity: status,
+      summary: title || summary.toLocaleUpperCase(),
+      text: message,
+      detail: message,
+      life: 5000
+    });
+  }
 }

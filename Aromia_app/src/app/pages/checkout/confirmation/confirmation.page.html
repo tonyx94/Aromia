@@ -22,6 +22,14 @@
     </ion-list>
   </div>
 
+  <!-- Favorites Button -->
+  <div class="favorites-button-container" *ngIf="savedAddresses.length > 0">
+    <ion-button expand="block" fill="outline" (click)="openFavoritesModal()">
+      <ion-icon slot="start" name="heart"></ion-icon>
+      Mis Lugares Favoritos ({{ savedAddresses.length }})
+    </ion-button>
+  </div>
+
   <div class="map-wrapper">
     <div id="map" class="map-container"></div>
 

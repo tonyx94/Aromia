@@ -17,14 +17,34 @@
     }
   </div>
   <div class="cart">
-    <ion-button (click)="openCartComponent(true)" fill="outline" shape="round">
+    <ion-button [disabled]="getProductsInCart() == 0" (click)="setOpenCart(true)" fill="outline" shape="round">
       <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
     </ion-button>
+    @if(getProductsInCart() > 0) {
     <ion-badge color="danger">{{ getProductsInCart() }}</ion-badge>
+    }
   </div>
 </div>
 
+<ion-modal [isOpen]="isCartOpen">
+  <ng-template>
 
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-button (click)="setOpenCart(false)">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="p-26">
+      <aromia-cart (ready)="setOpenCart(!$event)"></aromia-cart>
+    </ion-content>
+
+
+
+
+  </ng-template>
+</ion-modal>
 
 
 

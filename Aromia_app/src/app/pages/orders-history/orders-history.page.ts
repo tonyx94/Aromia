@@ -4,6 +4,8 @@ import { IonicModule } from '@ionic/angular';
 import { OrdersService } from '../../services/orders.service';
 import { Order } from '../../models/order';
 import { RouterModule } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { refreshOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-orders-history',
@@ -16,7 +18,9 @@ export class OrdersHistoryPage implements OnInit {
   orders: Order[] = [];
   loading = false;
 
-  constructor(private ordersService: OrdersService) {}
+  constructor(private ordersService: OrdersService) {
+    addIcons({ refreshOutline });
+  }
 
   ngOnInit() {
     this.loadOrders();

@@ -68,7 +68,13 @@
     <p-table #users_tbl *ngIf="users" [value]="usersFiltered" [paginator]="true" [rows]="users.length"
         [responsiveLayout]="'scroll'" [globalFilterFields]="['name', 'lastname', 'user', 'status']" dataKey="user_id">
         <ng-template #caption>
-            <div class="flex">
+            <div class="flex gap-4">
+                <p-dropdown
+                    [options]="[{label: 'Todos', value: 'all'}, {label: 'Activos', value: 'active'}, {label: 'Inactivos', value: 'inactive'}]"
+                    [(ngModel)]="statusFilter" (onChange)="onStatusFilterChange($event.value)"
+                    placeholder="Filtrar por estado" class="w-48">
+                </p-dropdown>
+
                 <p-iconfield iconPosition="left" class="ml-auto">
                     <p-inputicon>
                         <i class="pi pi-search"></i>
@@ -112,9 +118,11 @@
                     {{ user.role.name | titlecase }}
                 </td>
 
-                <td (click)="showDialog(true, user)">
+                <td>
                     <p-tag [value]="user.isActive ? 'Activo' : 'Inactivo'"
-                        [severity]="user.isActive ? 'success' : 'danger'" />
+                        [severity]="user.isActive ? 'success' : 'danger'" (click)="confirmToggleStatus(user)"
+                        [ngStyle]="{'cursor': 'pointer'}"
+                        pTooltip="Click para {{ user.isActive ? 'inactivar' : 'activar' }}" tooltipPosition="top" />
                 </td>
 
             </tr>

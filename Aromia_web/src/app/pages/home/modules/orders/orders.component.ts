@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrdersService } from '../../../../services/apis/orders.service';
@@ -15,7 +15,7 @@ import { of } from 'rxjs';
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
   private ordersService = inject(OrdersService);
   private storageService = inject(StorageService);
 
@@ -141,6 +141,74 @@ export class OrdersComponent implements OnInit {
     this.selectedOrder = order;
   }
 
+  copyGoogleMapsLink() {
+    if (!this.selectedOrder?.address) {
+      return;
+    }
+
+    let lat = this.selectedOrder.address.latitude;
+    let lng = this.selectedOrder.address.longitude;
+
+    // If coordinates are not in dedicated fields, try to parse from additionalInfo
+    if ((!lat || !lng) && this.selectedOrder.address.additionalInfo) {
+      const coords = this.parseCoordinatesFromAdditionalInfo(this.selectedOrder.address.additionalInfo);
+      if (coords) {
+        lat = coords.lat;
+        lng = coords.lng;
+      }
+    }
+
+    if (!lat || !lng) {
+      console.warn('No coordinates available for this address');
+      return;
+    }
+
+    // Create Google Maps link
+    const googleMapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(googleMapsLink).then(() => {
+      alert('Enlace de Google Maps copiado al portapapeles');
+    }).catch(err => {
+      console.error('Error copying to clipboard:', err);
+      alert('No se pudo copiar el enlace');
+    });
+  }
+
+  hasCoordinates(address: any): boolean {
+    if (!address) return false;
+
+    // Check if coordinates exist in dedicated fields
+    if (address.latitude && address.longitude) {
+      return true;
+    }
+
+    // Check if coordinates can be parsed from additionalInfo
+    if (address.additionalInfo) {
+      const coords = this.parseCoordinatesFromAdditionalInfo(address.additionalInfo);
+      return coords !== null;
+    }
+
+    return false;
+  }
+
+  private parseCoordinatesFromAdditionalInfo(additionalInfo: string): { lat: number; lng: number } | null {
+    // Parse format: "Lat: 9.943151, Lng: -84.097136"
+    const latMatch = additionalInfo.match(/Lat:\s*([-+]?\d+\.?\d*)/i);
+    const lngMatch = additionalInfo.match(/Lng:\s*([-+]?\d+\.?\d*)/i);
+
+    if (latMatch && lngMatch) {
+      const lat = parseFloat(latMatch[1]);
+      const lng = parseFloat(lngMatch[1]);
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        return { lat, lng };
+      }
+    }
+
+    return null;
+  }
+
   onSearchChange(value: string) {
     this.searchTerm = value;
     this.searchTermSubject.next(value);
@@ -248,5 +316,38 @@ export class OrdersComponent implements OnInit {
         console.log('Reverted to previous status due to error');
       }
     });
+  }
+
+  openInWaze() {
+    if (!this.selectedOrder?.address) {
+      console.warn('No address available for this order');
+      return;
+    }
+
+    let lat = this.selectedOrder.address.latitude;
+    let lon = this.selectedOrder.address.longitude;
+
+    // If coordinates are not in dedicated fields, try to parse from additionalInfo
+    if ((!lat || !lon) && this.selectedOrder.address.additionalInfo) {
+      const coords = this.parseCoordinatesFromAdditionalInfo(this.selectedOrder.address.additionalInfo);
+      if (coords) {
+        lat = coords.lat;
+        lon = coords.lng;
+      }
+    }
+
+    if (!lat || !lon) {
+      console.warn('No coordinates available for this address');
+      return;
+    }
+
+    // Waze deep link format: waze://?ll=latitude,longitude&navigate=yes
+    const wazeUrl = `https://waze.com/ul?ll=${lat},${lon}&navigate=yes`;
+
+    window.open(wazeUrl, '_blank');
+  }
+
+  ngOnDestroy() {
+    // Component cleanup
   }
 }

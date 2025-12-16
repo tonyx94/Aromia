@@ -13,7 +13,12 @@
     <div *ngIf="!loading && !error" class="orders-layout">
         <div class="orders-list-panel">
             <div class="panel-header">
-
+                <button (click)="loadOrders()" class="refresh-btn" title="Refrescar órdenes">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+                    </svg>
+                    Refrescar
+                </button>
                 <button *ngIf="searchTerm || statusFilter !== 'all' || dateStart || dateEnd" (click)="clearFilters()"
                     class="clear-filters-btn">
                     Limpiar filtros
@@ -139,26 +144,43 @@
 
                 <div class="details-section">
                     <h3>Dirección</h3>
-                    <div class="address-info">
-                        <p><strong>{{ selectedOrder.address.alias }}</strong></p>
-                        <p>{{ selectedOrder.address.streetAddress }}</p>
-                        <p>{{ selectedOrder.address.city }}, {{ selectedOrder.address.state }}</p>
-                        <p *ngIf="selectedOrder.address.postalCode">{{ selectedOrder.address.postalCode }}</p>
-                        <p>{{ selectedOrder.address.country }}</p>
+                    <div class="address-details">
+                        <p class="address-text">{{ selectedOrder.address.streetAddress }}</p>
+                        <p class="address-meta">{{ selectedOrder.address.city }}, {{ selectedOrder.address.state }}</p>
+                        <p class="address-meta" *ngIf="selectedOrder.address.postalCode">{{
+                            selectedOrder.address.postalCode }}</p>
+                        <p class="address-meta">{{ selectedOrder.address.country }}</p>
                         <p *ngIf="selectedOrder.address.additionalInfo" class="additional-info">
                             {{ selectedOrder.address.additionalInfo }}
                         </p>
-                    </div>
 
-                    <div class="map-container">
-                        <div class="map-placeholder">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            <p>Mapa de ubicación</p>
+                        <!-- Location Actions -->
+                        <div class="location-actions" *ngIf="hasCoordinates(selectedOrder.address)">
+                            <button class="waze-button" (click)="openInWaze()">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                Abrir en Waze
+                            </button>
+                            <button class="share-button" (click)="copyGoogleMapsLink()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="18" cy="5" r="3" />
+                                    <circle cx="6" cy="12" r="3" />
+                                    <circle cx="18" cy="19" r="3" />
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                </svg>
+                                Copiar enlace de Google Maps
+                            </button>
                         </div>
+
+                        <!-- No location fallback -->
+                        <p class="no-location" *ngIf="!hasCoordinates(selectedOrder.address)">
+                            Ubicación no disponible
+                        </p>
                     </div>
                 </div>
 

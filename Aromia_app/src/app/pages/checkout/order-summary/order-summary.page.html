@@ -45,7 +45,32 @@
     </div>
   </div>
 
-  <ion-button expand="block" (click)="proceedToPayment()">Continuar al Pago</ion-button>
+  <!-- Payment Method Selection -->
+  <div class="payment-methods-section">
+    <h3 class="section-title">Método de Pago</h3>
+    <div class="payment-methods-grid">
+      @for (method of paymentMethods; track method.id) {
+      <div class="payment-card" [class.selected]="selectedPaymentMethod === method.id"
+        (click)="selectPaymentMethod(method.id)" role="button" [attr.aria-pressed]="selectedPaymentMethod === method.id"
+        tabindex="0">
+        <div class="payment-card-content">
+          <ion-icon [name]="method.icon" class="payment-icon"></ion-icon>
+          <div class="payment-info">
+            <h4>{{ method.name }}</h4>
+            <p>{{ method.description }}</p>
+          </div>
+          @if (selectedPaymentMethod === method.id) {
+          <ion-icon name="checkmark-circle" class="check-icon" color="success"></ion-icon>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+
+  <ion-button expand="block" (click)="proceedToPayment()" [disabled]="selectedPaymentMethod === null">
+    Confirmar Pedido
+  </ion-button>
   }
   <ng-template #emptyCart>
     <div class="ion-text-center">

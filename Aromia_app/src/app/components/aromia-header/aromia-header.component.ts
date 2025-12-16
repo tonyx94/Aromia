@@ -6,11 +6,12 @@ import { Product } from '../../models/products';
 import { StorageKey, StorageService } from 'src/app/services/storage.service';
 import { ProfilePage } from 'src/app/pages/profile/profile.page';
 import { Customer } from 'src/app/models/customer';
+import { AromiaCartComponent } from '../aromia-cart/aromia-cart.component';
 
 @Component({
   selector: 'aromia-header',
   standalone: true,
-  imports: [IonContent, IonButtons, IonToolbar, IonHeader, IonModal, IonAvatar, IonIcon, IonMenuButton, IonButton, IonBadge, ProfilePage],
+  imports: [AromiaCartComponent, IonContent, IonButtons, IonToolbar, IonHeader, IonModal, IonAvatar, IonIcon, IonMenuButton, IonButton, IonBadge, ProfilePage],
   templateUrl: './aromia-header.component.html',
   styleUrls: ['./aromia-header.component.scss'],
 })
@@ -19,6 +20,7 @@ export class AromiaHeaderComponent implements OnInit {
   @Output() openCart = new EventEmitter<boolean>();
 
   isProfileOpen: boolean = false
+  isCartOpen: boolean = false
   user?: Customer
   constructor(private local: StorageService) {
     addIcons({ menu, cartOutline });
@@ -34,6 +36,9 @@ export class AromiaHeaderComponent implements OnInit {
     })
   }
 
+  setOpenCart(is: boolean) {
+    this.isCartOpen = is
+  }
   //AR-47
   getProductsInCart(): number {
     var sumCantOfEveryProduct = 0
@@ -42,9 +47,9 @@ export class AromiaHeaderComponent implements OnInit {
     return sumCantOfEveryProduct
   }
   //AR-47
-  openCartComponent(is: boolean) {
-    this.openCart.emit(is)
-  }
+  // openCartComponent(is: boolean) {
+  //   this.openCart.emit(is)
+  // }
 
   openProfile(ev: boolean) {
     this.isProfileOpen = ev

@@ -2,7 +2,10 @@
     <aromia-header [products]="products" (openCart)="setOpenCart($event)"></aromia-header>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 
     <div class="banners">
         <div class="carousel-container">
@@ -13,14 +16,17 @@
 
                     <div class="text">
                         <div class="logo">
-                            <img [src]="banner.logo" alt="">
+                            <img [src]="banner.logo" alt="Aromia Logo">
                         </div>
 
                         <p class="title">{{ banner.title }}</p>
                         <p class="subtitle">{{ banner.subtitle }}</p>
                     </div>
 
-                    <img [src]="banner.img" [alt]="'Banner ' + ($index + 1)" />
+                    <!-- Primera imagen con prioridad alta, las demás con lazy loading -->
+                    <img [src]="banner.img" [alt]="'Banner ' + ($index + 1)"
+                        [attr.loading]="$index === 0 ? 'eager' : 'lazy'"
+                        [attr.fetchpriority]="$index === 0 ? 'high' : 'auto'" [attr.decoding]="'async'" />
                 </div>
                 }
             </div>
@@ -42,7 +48,7 @@
             <p>No tienes pedidos activos.</p>
         </div>
         }
-        @for (order of orders; track order.id) {
+        @for (order of ordersFiltered; track order.id) {
         <div class="status" (click)="goToOrder(order.id)">
             <ion-item detail button lines="none">
                 <ion-label>
@@ -91,28 +97,27 @@
     </div>
 
 
+    <ion-modal [isOpen]="isCartOpen">
+        <ng-template>
+
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="end">
+                        <ion-button (click)="setOpenCart(false)">Cerrar</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="p-26">
+                <aromia-cart (ready)="setOpenCart(!$event)"></aromia-cart>
+            </ion-content>
+
+
+
+
+        </ng-template>
+    </ion-modal>
 
 </ion-content>
 <ion-footer>
     <ion-button mode="ios" (click)="goTo()" expand="block">Ver productos</ion-button>
 </ion-footer>
-
-<ion-modal [isOpen]="isCartOpen">
-    <ng-template>
-
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons slot="end">
-                    <ion-button (click)="setOpenCart(false)">Cerrar</ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="p-26">
-            <aromia-cart (ready)="setOpenCart(!$event)"></aromia-cart>
-        </ion-content>
-
-
-
-
-    </ng-template>
-</ion-modal>

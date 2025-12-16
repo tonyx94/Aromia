@@ -76,10 +76,14 @@ export class CustomerAddressesService {
   }
 
   async findAllByCustomer(customerId: number): Promise<CustomerAddress[]> {
-    return this.customerAddressRepository.find({
+    console.log('Service findAllByCustomer - customerId:', customerId, 'Type:', typeof customerId);
+    const addresses = await this.customerAddressRepository.find({
       where: { customer: { id: customerId } },
+      relations: ['customer'],
       order: { isDefault: 'DESC', id: 'ASC' },
     });
+    console.log('Service findAllByCustomer - Found addresses:', addresses.length);
+    return addresses;
   }
 
   async createForCustomer(

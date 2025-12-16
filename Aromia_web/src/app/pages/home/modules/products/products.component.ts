@@ -15,6 +15,7 @@ import { SelectModule } from 'primeng/select';
 import { Tag } from 'primeng/tag';
 import { RadioButton } from 'primeng/radiobutton';
 import { Rating } from 'primeng/rating';
+import { TooltipModule } from 'primeng/tooltip';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -48,6 +49,7 @@ export interface IProduct {
   quantity: number;
   inventoryStatus: string;
   rating: number;
+  is_active?: boolean;
 }
 
 @Component({
@@ -76,7 +78,8 @@ export interface IProduct {
     FloatLabel,
     ReactiveFormsModule,
     CheckboxModule,
-],
+    TooltipModule,
+  ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss',
@@ -108,7 +111,7 @@ export class ProductsComponent {
     private fb: FormBuilder
   ) {
     this.productForm = this.fb.group({
-      id: [null], 
+      id: [null],
       name: ['', [Validators.required, Validators.maxLength(200)]],
       description: [''],
       price: [null, [Validators.required, Validators.min(0.01)]],
@@ -118,7 +121,7 @@ export class ProductsComponent {
       is_active: [true],
       created_at: [null],
       updated_at: [null],
-      categoryId: [null], 
+      categoryId: [null],
     });
   }
 
@@ -160,7 +163,7 @@ export class ProductsComponent {
   }
 
   openNew() {
-    
+
     this.submitted = false;
     this.productDialog = true;
   }
@@ -220,7 +223,7 @@ export class ProductsComponent {
       },
       accept: () => {
         this.products = this.products.filter((val) => val.id !== product.id);
-        
+
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -254,10 +257,10 @@ export class ProductsComponent {
   }
 
   getSeverity(status: any) {
-    if(status === 0) {
+    if (status === 0) {
       return 'danger';
     }
-    else if(status > 0 && status <= 20) {
+    else if (status > 0 && status <= 20) {
       return 'warning';
     }
     else {
@@ -270,23 +273,63 @@ export class ProductsComponent {
 
     if (this.productForm.valid) {
       console.log('Producto guardado:', this.productForm.value);
-      this.api.post(ENDPOINTS.PRODUCTS.CREATE,this.productForm.value).subscribe({
+      this.api.post(ENDPOINTS.PRODUCTS.CREATE, this.productForm.value).subscribe({
         next: (response) => {
           console.log(response)
           this.getProductsList()
         }
       })
-      
+
     } else {
       this.productForm.markAllAsTouched();
     }
   }
 
-  
+
 
   onGlobalFilter(event: Event) {
     const input = event.target as HTMLInputElement;
     this.dt.filterGlobal(input.value, 'contains');
   }
+
+  statusFilter: 'all' | 'active' | 'inactive' = 'all';
+
+  onStatusFilterChange(status: 'all' | 'active' | 'inactive') {
+    this.statusFilter = status;
+    this.dt.filter(status === 'all' ? null : (status === 'active'), 'is_active', 'equals');
+  }
+
+  toggleStatus(product: IProduct) {
+    this.confirmationService.confirm({
+      message: `¿Seguro que deseas ${product.is_active ? 'desactivar' : 'activar'} este producto?`,
+      header: 'Confirmar cambio de estado',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        const newStatus = !product.is_active;
+        // Optimistic update
+        product.is_active = newStatus;
+
+        this.api.patch(`${ENDPOINTS.PRODUCTS.GET_ALL}/${product.id}`, { is_active: newStatus }).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Exitoso',
+              detail: `Producto ${newStatus ? 'activado' : 'desactivado'} correctamente`,
+              life: 3000,
+            });
+          },
+          error: (err) => {
+            // Revert
+            product.is_active = !newStatus;
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'No se pudo actualizar el estado',
+              life: 3000,
+            });
+          }
+        });
+      }
+    });
+  }
 }
- 

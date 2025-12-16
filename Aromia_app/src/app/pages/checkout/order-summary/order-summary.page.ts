@@ -24,6 +24,13 @@ export class OrderSummaryPage implements OnInit {
   cart: Product[] = [];
   discountAmount: number = 0;
 
+  // Payment method selection
+  selectedPaymentMethod: number | null = null;
+  paymentMethods: { id: number, name: string, description: string, icon: string }[] = [
+    { id: 0, name: 'Efectivo', description: 'Dinero en formato físico para uso inmediato.', icon: 'cash-outline' },
+    { id: 1, name: 'Sinpe móvil', description: 'Es un servicio para realizar transferencias.', icon: 'phone-portrait-outline' },
+  ];
+
   constructor(
     private checkoutService: CheckoutService,
     private checkoutState: CheckoutStateService,
@@ -73,6 +80,13 @@ export class OrderSummaryPage implements OnInit {
     return subtotal + taxes - discount;
   }
 
+  selectPaymentMethod(methodId: number): void {
+    this.selectedPaymentMethod = methodId;
+  }
 
-  proceedToPayment(): void { this.router.navigate(['/checkout/payment-selection']); }
+  proceedToPayment(): void {
+    if (this.selectedPaymentMethod !== null) {
+      this.router.navigate(['/checkout/confirmation']);
+    }
+  }
 }

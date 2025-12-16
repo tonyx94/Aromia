@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonLabel, IonChip, IonFooter, IonModal, IonButtons } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonLabel, IonChip, IonFooter, IonModal, IonButtons, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { AromiaHeaderComponent } from '../../components/aromia-header/aromia-header.component';
 import { AromiaApi } from '../../services/request';
 import { ENDPOINTS } from 'src/environments/endpoints';
@@ -17,23 +17,44 @@ import { DatePipe, CurrencyPipe } from '@angular/common';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
   standalone: true,
-  imports: [IonFooter, IonChip, IonLabel, IonItem, IonButton, IonHeader, IonContent, AromiaHeaderComponent, IonModal, IonButtons, AromiaCartComponent, IonToolbar, DatePipe, CurrencyPipe],
+  imports: [IonFooter, IonChip, IonLabel, IonItem, IonButton, IonHeader, IonContent, AromiaHeaderComponent, IonModal, IonButtons, AromiaCartComponent, IonToolbar, DatePipe, CurrencyPipe, IonRefresher, IonRefresherContent],
 })
 export class HomePage implements OnInit, OnDestroy {
   products: Product[] = [];
   recommendedProducts: Product[] = [];
 
   banners: any[] = [
-    { img: 'https://images.pexels.com/photos/3679973/pexels-photo-3679973.jpeg', logo: '../../../assets/aromia_logos/logo_white.svg', title: "Momento Dulce, Activado", subtitle: "Ordená tu favorito en un toque." },
-    { img: 'https://images.pexels.com/photos/11272702/pexels-photo-11272702.jpeg', logo: '../../../assets/aromia_logos/logo_white.svg', title: "Frescuras de Escalante", subtitle: "Ingredientes top. Nada de cuentos." },
-    { img: 'https://images.pexels.com/photos/5150204/pexels-photo-5150204.jpeg', logo: '../../../assets/aromia_logos/logo_white.svg', title: "Porque Sí, Te Lo Merecés", subtitle: "Un antojo no se discute. Se pide." },
-    { img: 'https://images.pexels.com/photos/4311542/pexels-photo-4311542.jpeg', logo: '../../../assets/aromia_logos/logo_white.svg', title: "El Postre que No Sabías Que Necesitabas", subtitle: "Fresas, uvas y crema… punto." },
+    {
+      img: 'https://images.pexels.com/photos/3679973/pexels-photo-3679973.jpeg?auto=compress&cs=tinysrgb&w=800&h=600',
+      logo: '../../../assets/aromia_logos/logo_white.svg',
+      title: "Momento Dulce, Activado",
+      subtitle: "Ordená tu favorito en un toque."
+    },
+    {
+      img: 'https://images.pexels.com/photos/11272702/pexels-photo-11272702.jpeg?auto=compress&cs=tinysrgb&w=800&h=600',
+      logo: '../../../assets/aromia_logos/logo_white.svg',
+      title: "Frescuras de Escalante",
+      subtitle: "Ingredientes top. Nada de cuentos."
+    },
+    {
+      img: 'https://images.pexels.com/photos/5150204/pexels-photo-5150204.jpeg?auto=compress&cs=tinysrgb&w=800&h=600',
+      logo: '../../../assets/aromia_logos/logo_white.svg',
+      title: "Porque Sí, Te Lo Merecés",
+      subtitle: "Un antojo no se discute. Se pide."
+    },
+    {
+      img: 'https://images.pexels.com/photos/4311542/pexels-photo-4311542.jpeg?auto=compress&cs=tinysrgb&w=800&h=600',
+      logo: '../../../assets/aromia_logos/logo_white.svg',
+      title: "El Postre que No Sabías Que Necesitabas",
+      subtitle: "Fresas, uvas y crema… punto."
+    },
   ];
   currentBannerIndex: number = 0;
   private intervalId: any;
   isCartOpen: any;
 
   orders: Order[] = [];
+  ordersFiltered: Order[] = [];
 
   constructor(
     private api: AromiaApi,
@@ -61,7 +82,8 @@ export class HomePage implements OnInit, OnDestroy {
 
     this.ordersService.getMyOrders(customerId).subscribe({
       next: (orders) => {
-        this.orders = orders;
+        this.orders = [...orders];
+        this.ordersFiltered = [...orders].filter((o) => o.status.name != 'finalizado');
         console.log('Orders fetched:', orders);
       },
       error: (e) => {
@@ -104,6 +126,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   setOpenCart(isOpen: any) {
+    console.log(isOpen)
     this.isCartOpen = isOpen;
   }
 
@@ -147,7 +170,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   getOrderProgress(status: any): number {
-    console.log(status)
     const statusLower = status.name.toLowerCase();
     if (['pendiente', 'pending', 'confirmed'].includes(statusLower)) {
       return 1;
@@ -161,5 +183,13 @@ export class HomePage implements OnInit, OnDestroy {
       return 5;
     }
     return 1; // Default to 1
+  }
+
+  handleRefresh(event: any) {
+    this.getProducts();
+    this.getOrders();
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
   }
 }

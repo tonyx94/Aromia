@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ProfileService } from '../../services/profile.service';
 import { Customer } from '../../models/customer';
 import { StorageKey, StorageService } from 'src/app/services/storage.service';
@@ -26,7 +27,8 @@ export class ProfilePage implements OnInit {
     private fb: FormBuilder,
     private profileService: ProfileService,
     private toastCtrl: ToastController,
-    private local: StorageService
+    private local: StorageService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -57,5 +59,30 @@ export class ProfilePage implements OnInit {
 
 
 
+  }
+
+  async onLogout() {
+    try {
+      await this.local.removeAll();
+
+      const toast = await this.toastCtrl.create({
+        message: 'Sesión cerrada exitosamente',
+        duration: 2000,
+        color: 'success',
+        position: 'bottom'
+      });
+      await toast.present();
+
+      this.router.navigate(['/login'], { replaceUrl: true });
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      const toast = await this.toastCtrl.create({
+        message: 'Error al cerrar sesión',
+        duration: 2000,
+        color: 'danger',
+        position: 'bottom'
+      });
+      await toast.present();
+    }
   }
 }

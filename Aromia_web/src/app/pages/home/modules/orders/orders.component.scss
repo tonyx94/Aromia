@@ -94,12 +94,46 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
+        gap: 1rem;
 
         h2 {
             font-size: 1.75rem;
             font-weight: 700;
             margin: 0;
             color: #ffffff;
+        }
+
+        .refresh-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #a8ff35;
+            color: #121212;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            svg {
+                transition: transform 0.3s ease;
+            }
+
+            &:hover {
+                background: #95e62a;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(168, 255, 53, 0.3);
+
+                svg {
+                    transform: rotate(180deg);
+                }
+            }
+
+            &:active {
+                transform: translateY(0);
+            }
         }
 
         .clear-filters-btn {
@@ -466,28 +500,73 @@
                 }
             }
 
-            .map-container {
-                .map-placeholder {
-                    background: #121212;
-                    border: 2px dashed #333;
-                    border-radius: 8px;
-                    padding: 3rem;
+            .location-actions {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1rem;
+                flex-wrap: wrap;
+
+                .waze-button,
+                .share-button {
+                    flex: 1;
+                    min-width: 200px;
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    gap: 1rem;
-                    color: #666;
+                    gap: 0.5rem;
+                    padding: 1rem 1.5rem;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
 
                     svg {
-                        opacity: 0.5;
-                    }
-
-                    p {
-                        margin: 0;
-                        font-size: 0.95rem;
+                        flex-shrink: 0;
                     }
                 }
+
+                .waze-button {
+                    background: #a8ff35;
+                    color: #121212;
+
+                    &:hover {
+                        background: #95e62a;
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(168, 255, 53, 0.3);
+                    }
+
+                    &:active {
+                        transform: translateY(0);
+                    }
+                }
+
+                .share-button {
+                    background: transparent;
+                    color: #a8ff35;
+                    border: 1px solid #a8ff35;
+
+                    &:hover {
+                        background: rgba(168, 255, 53, 0.1);
+                        transform: translateY(-2px);
+                    }
+
+                    &:active {
+                        transform: translateY(0);
+                    }
+                }
+            }
+
+            .no-location {
+                background: #121212;
+                border: 2px dashed #333;
+                border-radius: 8px;
+                padding: 2rem;
+                text-align: center;
+                color: #666;
+                font-size: 0.95rem;
+                margin-top: 1rem;
             }
 
             .status-chips-container {
@@ -603,6 +682,43 @@
 
         .clear-filters-btn {
             width: 100%;
+        }
+    }
+}
+
+// Custom Leaflet Marker Styles
+::ng-deep .custom-marker {
+    background: transparent;
+    border: none;
+
+    .marker-pin {
+        width: 30px;
+        height: 42px;
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #a8ff35;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            left: 0;
+            top: 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #121212;
+            border-radius: 50%;
+            left: 10px;
+            top: 8px;
+            z-index: 1;
         }
     }
 }

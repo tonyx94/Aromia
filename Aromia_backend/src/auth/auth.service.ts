@@ -12,7 +12,7 @@ export class AuthService {
     private readonly adminUserService: AdminUsersService,
     private readonly customerService: CustomersService,
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(email: string, password: string, userType: 'admin' | 'customer') {
     let user;
@@ -23,9 +23,17 @@ export class AuthService {
     }
 
     if (!user) throw new UnauthorizedException('Usuario no encontrado');
- 
+
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) throw new UnauthorizedException('Contraseña incorrecta');
+
+    // Debug: verificar el valor de isActive
+    console.log('User isActive status:', user.isActive, 'for user:', user.email);
+
+    // Validar que el usuario esté activo
+    if (!user.isActive) {
+      throw new UnauthorizedException('Tu cuenta está inactiva. Contacta al administrador.');
+    }
 
     const { password: _, ...result } = user;
     return result;
@@ -39,12 +47,16 @@ export class AuthService {
     };
     console.log(user)
     return {
-      access_token: this.jwtService.sign(payload), 
+      access_token: this.jwtService.sign(payload),
       user: {
         id: user.id,
         name: user.firstName + " " + user.lastName,
+        lastname: user.lastName,
         phone: user.phone,
         email: user.email,
+        role: user.role, // Include the full role object
+        roleId: user.roleId,
+        isActive: user.isActive,
       }
     };
   }
