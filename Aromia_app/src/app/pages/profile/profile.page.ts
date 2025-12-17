@@ -57,7 +57,6 @@ export class ProfilePage implements OnInit {
     if (this.form.invalid) return;
 
     this.loading = true;
-    // no enviamos email porque normalmente no se edita
     const { email, ...data } = this.form.getRawValue();
 
 

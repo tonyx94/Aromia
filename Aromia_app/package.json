@@ -9,7 +9,11 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "resources": "sudo npx capacitor-resources -i -p android,ios",
     "lint": "ng lint"
+  },
+  "overrides": {
+    "jimp": "^0.16.13"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +55,7 @@
     "@types/leaflet": "^1.9.21",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
+    "capacitor-resources": "^2.0.5",
     "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",

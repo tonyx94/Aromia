@@ -35,7 +35,6 @@ export class AddressService {
 
   setDefault(customerId: number, id: number): Observable<Address> {
     console.log('AddressService.setDefault - customerId:', customerId, 'id:', id);
-    // Send customer_id in payload
     return this.api.put<Address>(`${this.baseEndpoint}/${id}/default`, { customer_id: customerId });
   }
 }

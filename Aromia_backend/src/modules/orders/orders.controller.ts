@@ -72,7 +72,6 @@ export class OrdersController {
     return this.ordersService.updateStatus(id, body.status_id);
   }
 
-  // ===== DASHBOARD STATISTICS ENDPOINTS =====
 
   @Get('stats/sales-over-time')
   @ApiQuery({ name: 'startDate', required: true, type: String })

@@ -46,13 +46,11 @@ export class AromiaCartComponent implements OnInit, AfterViewInit {
   checkProductsAvailability() {
     this.api.get<Product[]>(ENDPOINTS.PRODUCTS.GET_ACTIVE).subscribe((activeProducts) => {
       this.activeProducts = activeProducts;
-      // Mark unavailable products locally
-      // We don't remove them automatically, just let the user know
     });
   }
 
   isAvailable(product: Product): boolean {
-    if (this.activeProducts.length === 0) return true; // Loading or initial state
+    if (this.activeProducts.length === 0) return true;
     return this.activeProducts.some(p => p.id === product.id);
   }
 
