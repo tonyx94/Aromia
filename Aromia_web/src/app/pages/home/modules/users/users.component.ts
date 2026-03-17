@@ -109,7 +109,7 @@ export class UsersComponent implements OnInit {
     this.form = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       roleId: [null, Validators.required],
@@ -120,7 +120,7 @@ export class UsersComponent implements OnInit {
       id: ['', Validators.required],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{8}$/)]],
       email: ['', [Validators.required, Validators.email]],
       roleId: [null, Validators.required],
       isActive: [true]
@@ -150,6 +150,29 @@ export class UsersComponent implements OnInit {
       if (this.form.invalid) {
         this.isLoading = false;
         this.form.markAllAsTouched();
+
+        const invalidFields = [];
+        const controls = this.form.controls;
+        for (const name in controls) {
+          if (controls[name].invalid) {
+            let fieldName = name;
+            switch (name) {
+              case 'firstName': fieldName = 'Nombre'; break;
+              case 'lastName': fieldName = 'Apellido'; break;
+              case 'phone': fieldName = 'Teléfono (8 dígitos)'; break;
+              case 'email': fieldName = 'Correo'; break;
+              case 'password': fieldName = 'Contraseña'; break;
+              case 'roleId': fieldName = 'Rol'; break;
+            }
+            invalidFields.push(fieldName);
+          }
+        }
+
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Campos inválidos',
+          detail: `Por favor revisa: ${invalidFields.join(', ')}`
+        });
         return;
       }
 

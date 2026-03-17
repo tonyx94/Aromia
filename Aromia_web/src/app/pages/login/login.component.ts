@@ -88,6 +88,16 @@ export class LoginComponent implements OnInit {
   login() {
     if (this.loginForm.invalid || this.isLoggingIn) {
       this.loginForm.markAllAsTouched();
+
+      const invalidFields = [];
+      const controls = this.loginForm.controls;
+      for (const name in controls) {
+        if (controls[name].invalid) {
+          invalidFields.push(name === 'email' ? 'Correo' : 'Contraseña');
+        }
+      }
+
+      this.message(`Por favor completa: ${invalidFields.join(', ')}`, 'error', 'Campos requeridos');
       return;
     }
 

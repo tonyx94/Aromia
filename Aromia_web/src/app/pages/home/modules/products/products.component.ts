@@ -282,6 +282,30 @@ export class ProductsComponent {
 
     } else {
       this.productForm.markAllAsTouched();
+
+      const invalidFields = [];
+      const controls = this.productForm.controls;
+      for (const name in controls) {
+        if (controls[name].invalid) {
+          let fieldName = name;
+          switch (name) {
+            case 'name': fieldName = 'Nombre'; break;
+            case 'price': fieldName = 'Precio'; break;
+            case 'stock_quantity': fieldName = 'Cantidad'; break;
+            // Add others if strictly required
+          }
+          if (controls[name].errors?.['required']) { // check if it's actually required
+            invalidFields.push(fieldName);
+          }
+        }
+      }
+
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Campos requeridos',
+        detail: `Por favor completa: ${invalidFields.join(', ')}`,
+        life: 3000
+      });
     }
   }
 

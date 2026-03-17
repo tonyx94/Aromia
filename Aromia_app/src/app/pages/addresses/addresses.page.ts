@@ -150,7 +150,34 @@ export class AddressesPage implements OnInit {
   }
 
   async onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      const invalidFields = [];
+      const controls = this.form.controls;
+
+      const fieldMap: any = {
+        alias: 'Alias',
+        street_address: 'Dirección',
+        city: 'Ciudad',
+        state: 'Estado/Provincia',
+        postal_code: 'Código Postal'
+      };
+
+      for (const name in controls) {
+        // @ts-ignore
+        if (controls[name].invalid) {
+          invalidFields.push(fieldMap[name] || name);
+        }
+      }
+
+      const toast = await this.toastCtrl.create({
+        message: `Por favor completa: ${invalidFields.join(', ')}`,
+        duration: 3000,
+        position: 'bottom',
+        color: 'danger'
+      });
+      await toast.present();
+      return;
+    }
 
     const value = this.form.getRawValue();
     const id = value.id;
